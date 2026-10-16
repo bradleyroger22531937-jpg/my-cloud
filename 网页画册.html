@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>世纪末歌设定集</title>
+<style>
+/* ============================================================
+   样式目录（Ctrl+F 搜编号可快速跳转）
+   ------------------------------------------------------------
+   【01】基础重置
+   【02】页面背景
+   【03】意识流装饰
+   【04】漂浮光点
+   【05】顶部标题
+   【06】分享按钮
+   【07】画册舞台
+   【08】图片卡片
+   【09】页底说明
+   【10】底部导航
+   【11】大图预览
+   【12】提示 Toast
+   【13】手机与平板适配
+   ============================================================ */
+
+/* 【01】基础重置 */
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; overscroll-behavior:none; }
+
+/* 【02】页面背景 */
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+  background-color: #e6cfe0;
+  background-image:
+    radial-gradient(circle at 12% 16%, rgba(255,170,205,0.85), transparent 44%),
+    radial-gradient(circle at 88% 20%, rgba(185,175,245,0.78), transparent 46%),
+    radial-gradient(circle at 78% 88%, rgba(165,200,245,0.7), transparent 50%),
+    radial-gradient(circle at 22% 92%, rgba(255,195,175,0.68), transparent 48%),
+    linear-gradient(160deg, #ebd4e6 0%, #dcc8e8 32%, #ccd2ec 62%, #e6cfd6 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  padding-top: max(14px, env(safe-area-inset-top));
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+  position: relative;
+}
+
+/* 【03】意识流装饰 */
+.bg-art { position:fixed; inset:-15%; z-index:0; pointer-events:none; overflow:hidden; }
+.blob { position:absolute; border-radius:50%; filter:blur(60px); will-change:transform; }
+.b1 { width:62vmax; height:62vmax; background:radial-gradient(circle, rgba(255,155,200,0.9), rgba(255,155,200,0) 70%); top:-14%; left:-12%; animation:bmove1 32s ease-in-out infinite alternate; }
+.b2 { width:56vmax; height:56vmax; background:radial-gradient(circle, rgba(155,165,245,0.85), rgba(155,165,245,0) 70%); top:16%; right:-16%; animation:bmove2 38s ease-in-out infinite alternate; }
+.b3 { width:52vmax; height:52vmax; background:radial-gradient(circle, rgba(178,152,235,0.8), rgba(178,152,235,0) 70%); bottom:-20%; left:16%; animation:bmove3 30s ease-in-out infinite alternate; }
+.b4 { width:44vmax; height:44vmax; background:radial-gradient(circle, rgba(255,190,170,0.75), rgba(255,190,170,0) 70%); bottom:4%; right:10%; animation:bmove4 26s ease-in-out infinite alternate; }
+.b5 { width:48vmax; height:48vmax; background:radial-gradient(circle, rgba(165,220,222,0.65), rgba(165,220,222,0) 70%); top:36%; left:30%; animation:bmove5 34s ease-in-out infinite alternate; }
+@keyframes bmove1 { 0%{transform:translate(0,0) scale(1);} 100%{transform:translate(8vw,6vh) scale(1.15);} }
+@keyframes bmove2 { 0%{transform:translate(0,0) scale(1.05);} 100%{transform:translate(-6vw,8vh) scale(0.95);} }
+@keyframes bmove3 { 0%{transform:translate(0,0) scale(1);} 100%{transform:translate(10vw,-7vh) scale(1.12);} }
+@keyframes bmove4 { 0%{transform:translate(0,0) scale(1.08);} 100%{transform:translate(-9vw,-5vh) scale(0.98);} }
+@keyframes bmove5 { 0%{transform:translate(0,0) scale(0.98);} 100%{transform:translate(-5vw,7vh) scale(1.1);} }
+.bg-lines { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+/* 【04】漂浮光点 */
+.star {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 3px rgba(255,255,255,0.95);
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
+  opacity: 0;
+}
+
+/* 【05】顶部标题 */
+header { text-align:center; flex-shrink:0; padding:2px 0 10px; position:relative; z-index:2; }
+h1 {
+  font-weight:700;
+  font-size:clamp(1.25rem, 5.2vw, 2rem);
+  letter-spacing:0.22em; text-indent:0.22em;
+  line-height:1.3; color:#6b4470;
+  text-shadow:0 2px 14px rgba(255,255,255,0.85);
+  margin-bottom:5px;
+}
+header .sub {
+  font-style:italic; font-weight:400;
+  font-size:clamp(0.68rem, 2.6vw, 0.88rem);
+  letter-spacing:0.26em; text-indent:0.26em;
+  color:#8a6a98;
+  text-shadow:0 1px 10px rgba(255,255,255,0.75);
+}
+
+/* 【06】分享按钮 */
+.share-btn {
+  position:fixed;
+  top:max(12px, env(safe-area-inset-top));
+  right:max(12px, env(safe-area-inset-right));
+  z-index:60;
+  display:flex; align-items:center; gap:6px;
+  padding:8px 16px;
+  font-family:inherit; font-size:0.78rem; font-weight:500;
+  letter-spacing:0.1em; color:#7a5a88;
+  background:rgba(255,255,255,0.82);
+  border:1px solid rgba(200,170,210,0.5);
+  border-radius:999px; cursor:pointer;
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  box-shadow:0 4px 14px rgba(170,130,200,0.2);
+  transition:all 0.25s ease;
+}
+.share-btn:hover { background:#fff; border-color:rgba(200,170,210,0.8); transform:translateY(-1px); box-shadow:0 6px 18px rgba(170,130,200,0.3); }
+.share-btn:active { transform:translateY(0); }
+.share-btn svg { width:14px; height:14px; flex-shrink:0; }
+
+/* 【07】画册舞台 */
+.stage {
+  flex:1; min-height:0; position:relative; z-index:2;
+  display:flex; align-items:stretch; justify-content:center;
+  padding: 0 clamp(12px, 3vw, 40px);
+}
+.page-view {
+  width:100%;
+  max-width:1000px;
+  height:100%;
+  background:linear-gradient(160deg, #fffdfe 0%, #f8f0f7 100%);
+  border-radius:14px;
+  box-shadow:
+    0 18px 42px rgba(140,105,165,0.28),
+    0 0 0 1px rgba(255,255,255,0.9) inset;
+  padding:12px;
+  display:flex; flex-direction:column; gap:8px;
+  overflow:hidden;
+}
+.card-grid {
+  flex:1; min-height:0;
+  display:grid; gap:10px;
+}
+
+/* 【08】图片卡片 */
+.card {
+  border:1px solid #d8c0e0;
+  border-radius:9px;
+  background:#fff;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  cursor:zoom-in;
+  box-shadow:0 2px 8px rgba(180,140,200,0.12);
+  transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(180,140,200,0.24); border-color:#c8a8dc; }
+.card .pic {
+  flex:1; min-height:0;
+  padding:5px;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.card .pic img { max-width:100%; max-height:100%; object-fit:contain; display:block; }
+.card .note {
+  flex-shrink:0;
+  min-height:22px;
+  padding:3px 6px;
+  font-size:0.66rem;
+  line-height:16px;
+  text-align:center;
+  color:#8a6a98;
+  border-top:1px dashed #e6d2ee;
+  background:#fdf9ff;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.card.empty {
+  background:linear-gradient(135deg, #fdf4fa 0%, #f0e4f2 100%);
+  cursor:default;
+}
+.card.empty .pic { background:none; }
+.card.err .pic {
+  font-size:0.65rem; color:#b07a9a; text-align:center; line-height:1.5;
+  padding:8px; word-break:break-all;
+}
+
+/* 【09】页底说明 */
+.page-caption {
+  flex-shrink:0;
+  padding:6px 10px 4px;
+  font-size:0.78rem;
+  line-height:1.6;
+  color:#56445f;
+  text-align:center;
+  border-top:1px solid rgba(200,170,210,0.18);
+}
+.page-caption:empty { display:none; }
+
+/* 【10】底部导航 */
+.nav {
+  display:flex; align-items:center; justify-content:center;
+  gap:18px; flex-shrink:0; padding-top:12px;
+  position:relative; z-index:2;
+}
+.nav button {
+  font-family:inherit; font-size:0.8rem; font-weight:500;
+  letter-spacing:0.12em; color:#7a5a88;
+  background:rgba(255,255,255,0.78);
+  border:1px solid rgba(200,170,210,0.45);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  padding:9px 22px; border-radius:999px; cursor:pointer;
+  transition:all 0.25s ease;
+  box-shadow:0 4px 14px rgba(170,130,200,0.18);
+}
+.nav button:hover:not(:disabled) {
+  background:#fff; border-color:rgba(200,170,210,0.7); color:#5a3a68;
+  transform:translateY(-1px); box-shadow:0 6px 18px rgba(170,130,200,0.28);
+}
+.nav button:active:not(:disabled) { transform:translateY(0); }
+.nav button:disabled { opacity:0.3; cursor:default; }
+.indicator {
+  font-size:0.72rem; font-weight:600; letter-spacing:0.22em;
+  color:#8a6a98; min-width:64px; text-align:center;
+  text-shadow:0 1px 8px rgba(255,255,255,0.8);
+}
+
+/* 【11】大图预览（改用 transform 定位，彻底解决截断和锚点问题） */
+.lightbox {
+  position:fixed; inset:0;
+  background:rgba(45,25,55,0.92);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  z-index:100;
+  overflow: hidden;              /* 不再用滚动条，全靠 transform 平移 */
+  opacity:0; pointer-events:none; transition:opacity 0.3s ease;
+}
+.lightbox.active { opacity:1; pointer-events:auto; }
+.lightbox img {
+  position: absolute;
+  top: 0; left: 0;
+  transform-origin: 0 0;         /* 关键：以左上角为原点，缩放数学才能干净 */
+  will-change: transform;
+  display: block;
+  border-radius:10px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+  cursor: default;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.lightbox img.draggable { cursor: grab; }
+.lightbox img.dragging  { cursor: grabbing; }
+.lightbox-close {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  font-size: 24px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 101;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  transition: background 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.4); }
+.lightbox .hint {
+  position: fixed; bottom:max(20px, env(safe-area-inset-bottom));
+  left:50%; transform:translateX(-50%);
+  font-size:0.7rem; letter-spacing:0.25em; text-indent:0.25em;
+  color:rgba(255,255,255,0.6); white-space:nowrap; pointer-events:none;
+}
+
+/* 【12】提示 Toast */
+.toast {
+  position:fixed; left:50%; bottom:86px;
+  transform:translateX(-50%) translateY(10px);
+  background:rgba(60,40,70,0.92);
+  color:#fff; font-size:0.82rem; letter-spacing:0.08em;
+  padding:10px 22px; border-radius:999px;
+  opacity:0; pointer-events:none; transition:all 0.3s ease;
+  z-index:200;
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  max-width:80vw; text-align:center;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* 【13】手机与平板适配 */
+@media (min-width: 681px) and (max-width: 1024px) {
+  body { padding: 16px 22px; }
+  header { padding: 4px 0 14px; }
+  h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+  header .sub { font-size: clamp(0.8rem, 2vw, 1rem); }
+  .share-btn { padding: 9px 18px; font-size: 0.8rem; }
+  .page-view { padding: 14px; gap: 10px; border-radius: 16px; }
+  .card-grid { gap: 12px; }
+  .card .note { font-size: 0.74rem; min-height: 24px; line-height: 17px; }
+  .card .pic { padding: 6px; }
+  .page-caption { font-size: 0.86rem; padding: 8px 12px 5px; }
+  .nav { gap: 22px; padding-top: 14px; }
+  .nav button { padding: 10px 24px; font-size: 0.82rem; }
+  .indicator { font-size: 0.78rem; min-width: 70px; }
+  .toast { font-size: 0.86rem; padding: 11px 24px; }
+}
+
+@media (max-width: 680px) {
+  body { padding:10px 12px; padding-top:max(10px, env(safe-area-inset-top)); padding-bottom:max(10px, env(safe-area-inset-bottom)); }
+  header { padding:0 0 8px; }
+  .share-btn { padding:7px 13px; font-size:0.72rem; }
+  .share-btn svg { width:13px; height:13px; }
+  .page-view { padding:9px; gap:6px; border-radius:12px; }
+  .card-grid { gap:7px; }
+  .card .note { font-size:0.62rem; min-height:20px; line-height:15px; }
+  .page-caption { font-size:0.72rem; padding:5px 8px 3px; }
+  .nav { gap:10px; padding-top:10px; }
+  .nav button { padding:8px 16px; font-size:0.74rem; }
+  .indicator { font-size:0.66rem; min-width:54px; }
+  .toast { bottom:76px; font-size:0.76rem; padding:9px 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-art" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="blob b4"></div>
+  <div class="blob b5"></div>
+</div>
+
+<svg class="bg-lines" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.55)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+  <path d="M-100,300 C150,150 350,450 600,280 C800,150 950,400 1100,300" stroke="url(#lg1)" stroke-width="1.2" fill="none"/>
+  <path d="M-100,500 C200,400 400,650 650,500 C850,380 1000,600 1100,520" stroke="url(#lg1)" stroke-width="0.9" fill="none"/>
+  <path d="M-100,720 C180,650 380,820 620,700 C820,600 950,780 1100,720" stroke="url(#lg1)" stroke-width="1" fill="none"/>
+</svg>
+
+<button class="share-btn" id="shareBtn" type="button" aria-label="分享">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="18" cy="5" r="3"></circle>
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="19" r="3"></circle>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+  </svg>
+  <span>分享</span>
+</button>
+
+<header>
+  <h1>世纪末歌设定集</h1>
+  <p class="sub">the Centenary finale</p>
+</header>
+
+<main class="stage" id="stage">
+  <div class="page-view" id="pageView">
+    <div class="card-grid" id="cardGrid"></div>
+    <div class="page-caption" id="pageCaption"></div>
+  </div>
+</main>
+
+<nav class="nav">
+  <button id="prevBtn" type="button">← 上一页</button>
+  <span class="indicator" id="indicator"></span>
+  <button id="nextBtn" type="button">下一页 →</button>
+</nav>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" type="button">×</button>
+  <img id="lightboxImg" alt="">
+  <div class="hint">滚轮 / 双指缩放 · 拖拽移动 · ESC 或点右上角关闭</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   脚本目录
+   ------------------------------------------------------------
+   【A】用户配置区
+   【B】工具函数
+   【C】卡片渲染
+   【D】自动布局
+   【E】翻页逻辑
+   【F】大图预览（全新 transform 方案）
+   【G】分享按钮
+   【H】提示条
+   【I】漂浮光点
+   【J】初始化
+   ============================================================ */
+
+
+/* ============================================================
+   【A】用户配置区
+   ============================================================ */
+const PAGES = [
+  {
+    images: [ "開場白.png" ],
+    caption: "故事开场白"
+  },
+  {
+    images: [ 
+      { src: "01-Alfa.png", note: "Alfa立绘" },
+      { src: "01-ALFA-設定.png", note: "Alfa设定图" }
+    ],
+    caption: "Альфа·Соколова（Alfa·Sokolova），阿尔法·索科洛娃，圣域的守护者兼灵魂收容者"
+  },
+  {
+    images: [
+      { src: "02-Beta.png", note: "Beta立绘" },
+      { src: "02-BETA-設定.png", note: "Beta设定图" }
+    ],
+    caption: "Бета·Волокова（Beta·Volokova），贝塔·沃洛科娃，圣域的守护者兼灵魂收割者"
+  },
+  {
+    images: [
+      { src: "03-Gamma.png", note: "Gamma立绘" },
+      { src: "03-GAMMA-設定.png", note: "Gamma设定图" }
+    ],
+    caption: "Гамма·Страхова（Gamma·Strakhova），伽马·斯特拉霍娃，圣域的头目"
+  },
+  {
+    images: [
+      { src: "04-Delta.png", note: "Delta立绘" },
+      { src: "04-DELTA-設定.png", note: "Delta设定图" }
+    ],
+    caption: "Дельта·Малинна（Delta·Malinna），德尔塔·玛琳娜，圣域的外勤"
+  },
+  {
+    images: [
+      { src: "9月12日-Delta-the Centenary finale2.png" },
+      { src: "Delta-the Centenary finale-4K.png" }
+    ],
+    caption: "小德尔塔正在巡逻"
+  },
+  {
+    images: [ "9月18日-Beta-the Centenary finale.png" ],
+    caption: "贝塔正在感应并追踪敌人的踪迹"
+  },
+  {
+    images: [ "9月23日-ALFA-BETA.png" ],
+    caption: "阿尔法与贝塔的贴贴"
+  }
+];
+
+const EMPTY_GRADIENTS = [
+  "linear-gradient(150deg, #ffd0e2 0%, #ffbcd8 34%, #e0aee0 68%, #c4a8ea 100%)",
+  "linear-gradient(160deg, #c8d8fa 0%, #b0c4f5 34%, #a8b4ea 68%, #98a4dc 100%)",
+  "linear-gradient(155deg, #ffe4c0 0%, #ffcba6 34%, #f5b4ae 68%, #e09eb8 100%)",
+  "linear-gradient(165deg, #c4ecd8 0%, #a6dccc 34%, #98ccd4 68%, #88bcd4 100%)",
+  "linear-gradient(155deg, #e0caf5 0%, #ccb0ea 34%, #bca0e0 68%, #ac90d8 100%)",
+  "linear-gradient(160deg, #ffd8c8 0%, #ffbeb4 34%, #f5a6ae 68%, #e094ae 100%)"
+];
+
+
+/* ============================================================
+   【B】工具函数
+   ============================================================ */
+const GAP = 10;
+const CARD_RATIO = 0.82;
+function $(id) { return document.getElementById(id); }
+
+function normalizeImages(raw) {
+  if (!raw) return [];
+  if (!Array.isArray(raw)) raw = [raw];
+  const out = [];
+  for (let i = 0; i < raw.length; i++) {
+    const it = raw[i];
+    if (!it) continue;
+    if (typeof it === 'string') {
+      const s = it.trim();
+      if (s) out.push({ src: s, note: '' });
+    } else if (typeof it === 'object' && it.src) {
+      const s = String(it.src).trim();
+      if (s) out.push({ src: s, note: it.note ? String(it.note) : '' });
+    }
+  }
+  return out;
+}
+
+function getMaxZoom() {
+  return window.innerWidth <= 680 ? 4 : 2.5;
+}
+
+
+/* ============================================================
+   【C】卡片渲染
+   ============================================================ */
+const gridEl = $('cardGrid');
+const captionEl = $('pageCaption');
+const indicatorEl = $('indicator');
+let currentPage = 0;
+
+function renderPage() {
+  const page = PAGES[currentPage] || { images: [], caption: '' };
+  const imgs = normalizeImages(page.images);
+  gridEl.innerHTML = '';
+
+  if (imgs.length === 0) {
+    const card = document.createElement('div');
+    card.className = 'card empty';
+    card.style.background = EMPTY_GRADIENTS[currentPage % EMPTY_GRADIENTS.length];
+    card.style.borderColor = 'rgba(255,255,255,0.7)';
+    card.innerHTML = '<div class="pic"></div><div class="note">这一页还没有图片</div>';
+    gridEl.appendChild(card);
+  } else {
+    for (let i = 0; i < imgs.length; i++) {
+      const item = imgs[i];
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const pic = document.createElement('div');
+      pic.className = 'pic';
+
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = item.note || ('图片 ' + (i + 1));
+      img.loading = 'lazy';
+
+      img.onerror = function () {
+        card.classList.add('err');
+        pic.innerHTML = '图片未找到<br>' + item.src;
+        img.remove();
+      };
+
+      pic.appendChild(img);
+
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.textContent = item.note || '';
+
+      card.appendChild(pic);
+      card.appendChild(note);
+
+      if (item.src) {
+        card.addEventListener('click', function () {
+          if (card.classList.contains('err')) return;
+          openLightbox(item.src);
+        });
+      }
+      gridEl.appendChild(card);
+    }
+  }
+
+  captionEl.textContent = page.caption || '';
+  indicatorEl.textContent = (currentPage + 1) + ' / ' + PAGES.length;
+  $('prevBtn').disabled = currentPage === 0;
+  $('nextBtn').disabled = currentPage >= PAGES.length - 1;
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(layoutCards);
+  });
+}
+
+
+/* ============================================================
+   【D】自动布局
+   ============================================================ */
+function layoutCards() {
+  const n = gridEl.children.length;
+  if (n === 0) return;
+
+  const W = gridEl.clientWidth;
+  const H = gridEl.clientHeight;
+  if (!W || !H) return;
+
+  const isMobile = window.innerWidth <= 680;
+
+  if (isMobile) {
+    gridEl.style.display = 'flex';
+    gridEl.style.flexDirection = 'column';
+    gridEl.style.gap = GAP + 'px';
+    gridEl.style.height = '100%';
+    gridEl.style.overflow = 'hidden';
+    gridEl.style.justifyContent = 'center';
+
+    for (let i = 0; i < n; i++) {
+      gridEl.children[i].style.flex = '1';
+      gridEl.children[i].style.minHeight = '0';
+    }
+    return;
+  }
+
+  gridEl.style.display = 'grid';
+  gridEl.style.flexDirection = '';
+  gridEl.style.height = '';
+  gridEl.style.overflow = '';
+  for (let i = 0; i < n; i++) {
+    gridEl.children[i].style.flex = '';
+    gridEl.children[i].style.minHeight = '';
+  }
+
+  let best = null;
+  for (let cols = 1; cols <= n; cols++) {
+    const rows = Math.ceil(n / cols);
+    const maxW = (W - GAP * (cols - 1)) / cols;
+    const maxH = (H - GAP * (rows - 1)) / rows;
+
+    let w = maxW;
+    let h = w / CARD_RATIO;
+
+    if (n === 1) {
+      w = maxW;
+      h = maxH;
+    } else {
+      if (h > maxH) { h = maxH; w = h * CARD_RATIO; }
+      if (n === 2 && w > W * 0.48) { w = W * 0.48; h = w / CARD_RATIO; }
+    }
+
+    if (!best || w > best.w) best = { cols: cols, rows: rows, w: w, h: h };
+  }
+
+  gridEl.style.gridTemplateColumns = 'repeat(' + best.cols + ', ' + best.w.toFixed(1) + 'px)';
+  gridEl.style.gridAutoRows = best.h.toFixed(1) + 'px';
+  gridEl.style.justifyContent = 'center';
+  gridEl.style.alignContent = 'center';
+}
+
+
+/* ============================================================
+   【E】翻页逻辑
+   ============================================================ */
+function goPrev() { if (currentPage > 0) { currentPage--; renderPage(); } }
+function goNext() { if (currentPage < PAGES.length - 1) { currentPage++; renderPage(); } }
+
+$('prevBtn').addEventListener('click', goPrev);
+$('nextBtn').addEventListener('click', goNext);
+
+document.addEventListener('keydown', function (e) {
+  if ($('lightbox').classList.contains('active')) {
+    if (e.key === 'Escape') closeLightbox();
+    return;
+  }
+  if (e.key === 'ArrowLeft') goPrev();
+  if (e.key === 'ArrowRight') goNext();
+});
+
+
+/* ============================================================
+   【F】大图预览（全新 transform 方案）
+   ------------------------------------------------------------
+   状态：scale、tx、ty（相对于 lightbox 的平移）
+   图片绝对定位 left:0 top:0，transform-origin:0 0
+   所有缩放都以鼠标 / 双指中点为锚点，严格从那里缩放
+   ============================================================ */
+const lightboxEl = $('lightbox');
+const lightboxImgEl = $('lightboxImg');
+const lightboxClose = $('lightboxClose');
+
+const lb = {
+  cw: 0, ch: 0,        /* 容器尺寸 */
+  w: 0, h: 0,          /* 图片在 1 倍时的显示尺寸 */
+  scale: 1,
+  tx: 0, ty: 0,
+  dragging: false,
+  dragStartX: 0, dragStartY: 0,
+  dragStartTx: 0, dragStartTy: 0
+};
+
+/* 应用当前 transform 到图片 */
+function lbApply() {
+  lightboxImgEl.style.transform =
+    'translate(' + lb.tx + 'px, ' + lb.ty + 'px) scale(' + lb.scale + ')';
+  /* 放大后显示抓取光标 */
+  if (lb.scale > 1) {
+    lightboxImgEl.classList.add('draggable');
+  } else {
+    lightboxImgEl.classList.remove('draggable');
+    lightboxImgEl.classList.remove('dragging');
+  }
+}
+
+/* 边界约束：放大后不让图片边缘把画面留白 */
+function lbConstrain() {
+  const sw = lb.w * lb.scale;
+  const sh = lb.h * lb.scale;
+  if (sw <= lb.cw) {
+    lb.tx = (lb.cw - sw) / 2;
+  } else {
+    lb.tx = Math.max(lb.cw - sw, Math.min(0, lb.tx));
+  }
+  if (sh <= lb.ch) {
+    lb.ty = (lb.ch - sh) / 2;
+  } else {
+    lb.ty = Math.max(lb.ch - sh, Math.min(0, lb.ty));
+  }
+}
+
+/* 以 (cx, cy) 为锚点缩放到 newScale */
+function lbZoomAt(newScale, cx, cy) {
+  const maxZoom = getMaxZoom();
+  newScale = Math.max(1, Math.min(newScale, maxZoom));
+  if (Math.abs(newScale - lb.scale) < 0.0001) return;
+  const ratio = newScale / lb.scale;
+  lb.tx = cx - (cx - lb.tx) * ratio;
+  lb.ty = cy - (cy - lb.ty) * ratio;
+  lb.scale = newScale;
+  lbConstrain();
+  lbApply();
+}
+
+/* 重置并测量图片 */
+function lbReset() {
+  lb.scale = 1;
+  lb.tx = 0;
+  lb.ty = 0;
+  lightboxImgEl.style.transform = '';
+  lightboxImgEl.style.width = '';
+  lightboxImgEl.style.height = '';
+}
+
+function lbLayout() {
+  const cw = lightboxEl.clientWidth;
+  const ch = lightboxEl.clientHeight;
+  const natW = lightboxImgEl.naturalWidth;
+  const natH = lightboxImgEl.naturalHeight;
+  if (!natW || !natH || !cw || !ch) return;
+
+  const maxW = cw * 0.9;
+  const maxH = ch * 0.85;
+  const ratio = Math.min(maxW / natW, maxH / natH, 1);
+
+  lb.cw = cw;
+  lb.ch = ch;
+  lb.w = natW * ratio;
+  lb.h = natH * ratio;
+  lb.scale = 1;
+  lb.tx = (cw - lb.w) / 2;
+  lb.ty = (ch - lb.h) / 2;
+
+  lightboxImgEl.style.width = lb.w + 'px';
+  lightboxImgEl.style.height = lb.h + 'px';
+  lbApply();
+}
+
+function openLightbox(src) {
+  lightboxImgEl.src = src;
+  lbReset();
+  lightboxEl.classList.add('active');
+  if (lightboxImgEl.complete && lightboxImgEl.naturalWidth > 0) {
+    requestAnimationFrame(lbLayout);
+  } else {
+    lightboxImgEl.onload = function () {
+      requestAnimationFrame(lbLayout);
+    };
+  }
+}
+
+function closeLightbox() {
+  lightboxEl.classList.remove('active');
+  lightboxImgEl.classList.remove('draggable');
+  lightboxImgEl.classList.remove('dragging');
+  setTimeout(function () { lightboxImgEl.src = ''; }, 300);
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+
+/* 点击背景关闭 */
+lightboxEl.addEventListener('click', function (e) {
+  if (e.target === lightboxEl) closeLightbox();
+});
+
+/* ---------- 电脑端：滚轮缩放 ---------- */
+lightboxEl.addEventListener('wheel', function (e) {
+  if (!lightboxEl.classList.contains('active')) return;
+  e.preventDefault();
+  if (e.target.closest('.lightbox-close')) return;
+  const step = e.deltaY > 0 ? -0.15 : 0.15;
+  lbZoomAt(lb.scale + step, e.clientX, e.clientY);
+}, { passive: false });
+
+/* ---------- 电脑端：鼠标拖拽平移 ---------- */
+lightboxImgEl.addEventListener('mousedown', function (e) {
+  if (lb.scale <= 1) return;
+  lb.dragging = true;
+  lb.dragStartX = e.clientX;
+  lb.dragStartY = e.clientY;
+  lb.dragStartTx = lb.tx;
+  lb.dragStartTy = lb.ty;
+  lightboxImgEl.classList.add('dragging');
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', function (e) {
+  if (!lb.dragging) return;
+  lb.tx = lb.dragStartTx + (e.clientX - lb.dragStartX);
+  lb.ty = lb.dragStartTy + (e.clientY - lb.dragStartY);
+  lbConstrain();
+  lbApply();
+});
+
+document.addEventListener('mouseup', function () {
+  if (!lb.dragging) return;
+  lb.dragging = false;
+  lightboxImgEl.classList.remove('dragging');
+});
+
+/* ---------- 移动端 / 平板：双指缩放 + 单指平移 ---------- */
+let touchInitDist = 0;
+let touchInitScale = 1;
+let touchInitTx = 0;
+let touchInitTy = 0;
+let touchInitMidX = 0;
+let touchInitMidY = 0;
+let touchDragging = false;
+let touchDragStartX = 0;
+let touchDragStartY = 0;
+let touchDragStartTx = 0;
+let touchDragStartTy = 0;
+
+function touchesDistance(t1, t2) {
+  const dx = t1.clientX - t2.clientX;
+  const dy = t1.clientY - t2.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+function touchesMid(t1, t2) {
+  return {
+    x: (t1.clientX + t2.clientX) / 2,
+    y: (t1.clientY + t2.clientY) / 2
+  };
+}
+
+lightboxEl.addEventListener('touchstart', function (e) {
+  if (!lightboxEl.classList.contains('active')) return;
+
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    touchInitDist = touchesDistance(e.touches[0], e.touches[1]);
+    touchInitScale = lb.scale;
+    touchInitTx = lb.tx;
+    touchInitTy = lb.ty;
+    const mid = touchesMid(e.touches[0], e.touches[1]);
+    touchInitMidX = mid.x;
+    touchInitMidY = mid.y;
+    touchDragging = false;
+  } else if (e.touches.length === 1 && lb.scale > 1) {
+    /* 单指平移（仅放大后启用） */
+    touchDragging = true;
+    touchDragStartX = e.touches[0].clientX;
+    touchDragStartY = e.touches[0].clientY;
+    touchDragStartTx = lb.tx;
+    touchDragStartTy = lb.ty;
+  }
+}, { passive: false });
+
+lightboxEl.addEventListener('touchmove', function (e) {
+  if (!lightboxEl.classList.contains('active')) return;
+
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    const dist = touchesDistance(e.touches[0], e.touches[1]);
+    if (touchInitDist === 0) return;
+
+    const mid = touchesMid(e.touches[0], e.touches[1]);
+    const maxZoom = getMaxZoom();
+
+    /* 先算出目标缩放 */
+    let newScale = touchInitScale * (dist / touchInitDist);
+    newScale = Math.max(1, Math.min(newScale, maxZoom));
+
+    /* ★ 围绕初始中点缩放，再加上中点偏移量（支持双指平移） */
+    const ratio = newScale / touchInitScale;
+    let newTx = touchInitMidX - (touchInitMidX - touchInitTx) * ratio;
+    let newTy = touchInitMidY - (touchInitMidY - touchInitTy) * ratio;
+    newTx += (mid.x - touchInitMidX);
+    newTy += (mid.y - touchInitMidY);
+
+    lb.scale = newScale;
+    lb.tx = newTx;
+    lb.ty = newTy;
+    lbConstrain();
+    lbApply();
+  } else if (e.touches.length === 1 && touchDragging) {
+    e.preventDefault();
+    const dx = e.touches[0].clientX - touchDragStartX;
+    const dy = e.touches[0].clientY - touchDragStartY;
+    lb.tx = touchDragStartTx + dx;
+    lb.ty = touchDragStartTy + dy;
+    lbConstrain();
+    lbApply();
+  }
+}, { passive: false });
+
+lightboxEl.addEventListener('touchend', function (e) {
+  if (e.touches.length < 2) touchInitDist = 0;
+  if (e.touches.length === 1 && lb.scale > 1) {
+    /* 从双指变单指，重新初始化单指平移 */
+    touchDragging = true;
+    touchDragStartX = e.touches[0].clientX;
+    touchDragStartY = e.touches[0].clientY;
+    touchDragStartTx = lb.tx;
+    touchDragStartTy = lb.ty;
+  } else if (e.touches.length === 0) {
+    touchDragging = false;
+  }
+});
+
+/* 窗口尺寸变化时重新布局（仅在 lightbox 打开时） */
+window.addEventListener('resize', function () {
+  if (lightboxEl.classList.contains('active') && lightboxImgEl.naturalWidth) {
+    const oldScale = lb.scale;
+    lbLayout();
+    if (oldScale > 1) {
+      lbZoomAt(oldScale, lb.cw / 2, lb.ch / 2);
+    }
+  }
+});
+
+
+/* ============================================================
+   【G】分享按钮
+   ============================================================ */
+$('shareBtn').addEventListener('click', function () {
+  if (location.protocol === 'file:') {
+    showToast('请先把画册上传到网上，才能生成链接');
+    return;
+  }
+  const url = location.origin + location.pathname;
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(
+      function () { showToast('已复制链接'); },
+      function () { fallbackCopy(url); }
+    );
+  } else {
+    fallbackCopy(url);
+  }
+});
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '-1000px';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('已复制链接');
+  } catch (e) {
+    showToast('复制失败，请手动复制地址栏');
+  }
+  document.body.removeChild(ta);
+}
+
+
+/* ============================================================
+   【H】提示条
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2000);
+}
+
+
+/* ============================================================
+   【I】漂浮光点（基础上升 + 鼠标吸引，永不向下）
+   ============================================================ */
+const pageViewEl = $('pageView');
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let isMouseInsidePage = false;
+
+document.addEventListener('mousemove', function (e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  const rect = pageViewEl.getBoundingClientRect();
+  isMouseInsidePage = (
+    e.clientX >= rect.left &&
+    e.clientX <= rect.right &&
+    e.clientY >= rect.top &&
+    e.clientY <= rect.bottom
+  );
+});
+
+document.addEventListener('mouseleave', function () {
+  isMouseInsidePage = true;
+});
+
+const stars = [];
+const STAR_COUNT = window.innerWidth <= 680 ? 25 : 45;
+const BASE_UP_SPEED = 0.5;
+
+for (let i = 0; i < STAR_COUNT; i++) {
+  const el = document.createElement('div');
+  el.className = 'star';
+  document.body.appendChild(el);
+  stars.push({
+    el: el,
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: -(Math.random() * BASE_UP_SPEED + BASE_UP_SPEED * 0.5)
+  });
+}
+
+function updateStars() {
+  for (let i = 0; i < stars.length; i++) {
+    const s = stars[i];
+
+    if (!isMouseInsidePage) {
+      const dx = mouseX - s.x;
+      const dy = mouseY - s.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = 120;
+      if (dist < maxDist && dist > 1) {
+        const force = (maxDist - dist) / maxDist;
+        s.vx += (dx / dist) * force * 0.08;
+        if (dy < 0) {
+          s.vy += (dy / dist) * force * 0.1;
+        }
+      }
+    }
+
+    s.vy += (-BASE_UP_SPEED - s.vy) * 0.02;
+    s.vx *= 0.96;
+    s.vx += (Math.random() - 0.5) * 0.02;
+
+    s.x += s.vx;
+    s.y += s.vy;
+
+    if (s.y < -20) {
+      s.y = window.innerHeight + 20;
+      s.x = Math.random() * window.innerWidth;
+      s.vx = (Math.random() - 0.5) * 0.3;
+      s.vy = -(Math.random() * BASE_UP_SPEED + BASE_UP_SPEED * 0.5);
+    }
+    if (s.x < -30) s.x = window.innerWidth + 30;
+    if (s.x > window.innerWidth + 30) s.x = -30;
+
+    s.el.style.transform = 'translate(' + s.x + 'px, ' + s.y + 'px)';
+    s.el.style.opacity = (s.y > 0 && s.y < window.innerHeight) ? '1' : '0';
+  }
+  requestAnimationFrame(updateStars);
+}
+updateStars();
+
+
+/* ============================================================
+   【J】初始化
+   ============================================================ */
+let resizeTimer = null;
+window.addEventListener('resize', function () {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(layoutCards, 120);
+});
+
+renderPage();
+</script>
+</body>
+</html>

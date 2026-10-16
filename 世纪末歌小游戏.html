@@ -1,0 +1,2689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e18">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>世纪末歌 · 圣域余响</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0e18; --panel:#171f2f; --panel2:#1f2839; --panel3:#2a3550;
+  --ink:#eef2f9; --ink-dim:#a3adc3; --ink-faint:#6d7793;
+  --line:#28324a; --line2:#3a4761;
+  --gold:#e6b95e; --blue:#6fa8e0; --red:#ef7286; --green:#5fc39a;
+  --purple:#b98ee6; --ember:#e8a04c; --fog:#9fb0c9;
+  --veil:rgba(6,9,16,.62);
+  --shadow:0 6px 20px rgba(0,0,0,.5);
+  --shadow-lg:0 22px 58px rgba(0,0,0,.78);
+}
+html,body{width:100%;height:100%;overflow:hidden;overscroll-behavior:none;
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  color:var(--ink);user-select:none;-webkit-user-select:none;-webkit-text-size-adjust:100%;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -8%, rgba(122,96,196,.16), transparent 62%),
+    radial-gradient(ellipse 80% 55% at 50% 108%, rgba(58,108,178,.13), transparent 68%),
+    var(--bg);}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.screen.enter{animation:sIn .35s cubic-bezier(.2,.8,.3,1)}
+@keyframes sIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+#scr-boot{align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 62% 46% at 50% 42%,rgba(140,110,200,.18),transparent 72%),var(--bg)}
+.boot-inner{width:100%;position:relative;z-index:2}
+.boot-mark{display:block;width:100%;font-size:clamp(28px,6vw,44px);letter-spacing:.34em;padding-left:.34em;font-weight:600;
+  text-shadow:0 0 46px rgba(185,142,230,.45)}
+.boot-sub{display:block;width:100%;margin-top:12px;font-size:12px;letter-spacing:.42em;padding-left:.42em;color:var(--ink-faint)}
+.boot-bar{margin:32px auto 0;width:min(220px,52vw);height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.boot-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));animation:fillA 1.2s ease forwards}
+@keyframes fillA{to{width:100%}}
+.boot-tip{margin-top:13px;font-size:12px;color:var(--ink-faint)}
+.rain{position:absolute;top:-40px;width:2px;height:22px;border-radius:2px;z-index:1;
+  background:linear-gradient(180deg,rgba(120,170,230,0),rgba(110,160,225,.6));animation:rainFall linear infinite}
+@keyframes rainFall{0%{transform:translateY(-40px);opacity:0}12%{opacity:1}100%{transform:translateY(110vh);opacity:0}}
+
+#scr-title{align-items:center;justify-content:center;text-align:center;padding:4vh 5vw;overflow:hidden;
+  background:radial-gradient(ellipse 72% 52% at 50% 30%,rgba(140,110,200,.16),transparent 72%),var(--bg)}
+.title-wrap{width:100%;max-width:880px;position:relative;z-index:2}
+.title-kicker{display:block;width:100%;font-size:12px;letter-spacing:.3em;padding-left:.3em;color:var(--ink-faint);margin-bottom:12px}
+.title-main{display:block;width:100%;font-size:clamp(30px,7vw,56px);letter-spacing:.28em;padding-left:.28em;
+  font-weight:500;text-shadow:0 0 46px rgba(185,142,230,.45)}
+.title-sub{display:block;width:100%;margin-top:10px;font-size:clamp(12px,2.2vw,15px);letter-spacing:.32em;
+  padding-left:.32em;color:var(--ink-dim)}
+.title-quote{margin:22px auto 24px;font-size:clamp(11.5px,2vw,13.5px);line-height:2;color:var(--ink-dim);max-width:620px}
+.title-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.btn{padding:11px 22px;font-size:15px;border-radius:11px;background:linear-gradient(180deg,#1e2738,#161d2b);
+  border:1px solid var(--line2);box-shadow:var(--shadow);transition:transform .16s,border-color .16s,box-shadow .16s}
+.btn:hover{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.55)}
+.btn.primary{background:linear-gradient(180deg,#5385c2,#2d5585);color:#fff;border-color:transparent}
+.btn.primary:hover{box-shadow:0 10px 30px rgba(83,133,194,.4)}
+.btn.big{padding:13px 32px;font-size:16px}
+.opt-row{margin-top:18px;display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:12px;color:var(--ink-dim)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{padding:7px 13px;font-size:12px;color:var(--ink-dim);transition:background .18s,color .18s}
+.seg button.on{background:linear-gradient(180deg,#c39cf0,#9a6ecb);color:#151a26;font-weight:700}
+.title-foot{margin-top:18px;font-size:11px;color:var(--ink-faint)}
+
+#scr-game{height:100%;padding:7px 10px 8px;gap:6px;
+  background:
+    radial-gradient(ellipse 110% 70% at 50% -10%, rgba(122,96,196,.12), transparent 60%),
+    radial-gradient(ellipse 110% 60% at 50% 106%, rgba(58,108,178,.10), transparent 62%),
+    var(--bg);}
+.topbar{flex:0 0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:space-between;
+  background:linear-gradient(180deg,rgba(31,40,58,.96),rgba(23,31,47,.96));
+  border:1px solid var(--line);border-radius:14px;padding:6px 11px;box-shadow:var(--shadow)}
+.stats{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.stat{display:flex;align-items:baseline;gap:4px;padding:4px 9px;border-radius:9px;
+  background:linear-gradient(180deg,#232d41,#1a2233);border:1px solid rgba(60,75,105,.55)}
+.stat .lb{font-size:10.5px;color:var(--ink-dim)}
+.stat .vl{font-size:15.5px;font-weight:800;min-width:1em;text-align:center}
+.stat .mx{font-size:9.5px;color:var(--ink-faint)}
+.stat.n .vl{color:var(--purple)} .stat.e .vl{color:var(--blue)}
+.stat.s .vl{color:var(--green)} .stat.s.low .vl{color:var(--red);text-shadow:0 0 12px rgba(239,114,134,.7)}
+.stat.m .vl{color:var(--ember)}
+.stat.m.ready{background:linear-gradient(180deg,rgba(232,160,76,.28),rgba(232,160,76,.12));
+  box-shadow:0 0 0 1px rgba(232,160,76,.6),0 0 18px rgba(232,160,76,.25)}
+.topbtns{display:flex;gap:6px;flex-wrap:wrap}
+.tbtn{padding:7px 12px;border-radius:10px;font-size:12.5px;border:1px solid var(--line2);
+  background:linear-gradient(180deg,#1e2738,#161d2b);transition:border-color .16s,color .16s,transform .16s}
+.tbtn:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.tbtn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.tbtn.go{background:linear-gradient(180deg,#c39cf0,#7a58a8);color:#151a26;border-color:transparent;font-weight:800}
+.tbtn.go:hover{color:#151a26;box-shadow:0 0 22px rgba(185,142,230,.45)}
+
+.weatherbar{flex:0 0 auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:6px 12px;border-radius:12px;
+  background:linear-gradient(180deg,rgba(31,40,58,.94),rgba(23,31,47,.94));
+  border:1px solid var(--line2);font-size:12.5px;transition:border-color .3s,box-shadow .3s}
+.weatherbar.changed{border-color:var(--gold);box-shadow:0 0 0 3px rgba(230,185,94,.28),0 0 26px rgba(230,185,94,.22);
+  animation:wxPulse 1.5s ease-in-out}
+@keyframes wxPulse{0%{transform:scale(1)}30%{transform:scale(1.012)}100%{transform:scale(1)}}
+.weatherbar .wtag{font-weight:800;padding:2px 11px;border-radius:8px;font-size:13.5px;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.weatherbar .wtag.rain{color:#06201c;background:linear-gradient(180deg,#9ecdf5,#5b8fd0)}
+.weatherbar .wtag.drizzle{color:#211706;background:linear-gradient(180deg,#f2d78f,#c9a24a)}
+.weatherbar .wtag.fog{color:#0d1520;background:linear-gradient(180deg,#cbd9ea,#8fa4c0)}
+.weatherbar .wtag.clear{color:#241a04;background:linear-gradient(180deg,#ffe894,#e6b95e)}
+.weatherbar .wd{color:var(--ink-dim);font-size:11.5px}
+.weatherbar .wsep{width:1px;height:14px;background:var(--line2);flex:0 0 auto}
+.weatherbar .scn{color:var(--ink-dim);display:flex;gap:9px;flex-wrap:wrap;font-size:11.5px}
+.weatherbar .scn i{font-style:normal;color:var(--ink-faint)}
+.weatherbar .ai{margin-left:auto;color:var(--red);font-weight:700;white-space:nowrap;font-size:11.5px;
+  text-shadow:0 0 12px rgba(239,114,134,.5)}
+.weatherbar .hint{color:var(--gold);font-weight:700;font-size:11.5px}
+
+.statusbar{flex:0 0 auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:6px 12px;border-radius:12px;
+  background:linear-gradient(180deg,rgba(31,40,58,.92),rgba(23,31,47,.92));
+  border:1px solid var(--line);font-size:12.5px;min-height:33px;transition:border-color .25s,box-shadow .25s}
+.statusbar.on{border-color:var(--purple);box-shadow:0 0 0 2px rgba(185,142,230,.16),0 0 22px rgba(185,142,230,.14)}
+.statusbar .dot{width:7px;height:7px;border-radius:50%;background:var(--line2);flex:0 0 auto}
+.statusbar.on .dot{background:var(--purple);box-shadow:0 0 10px var(--purple);animation:blinkA 1s ease-in-out infinite}
+@keyframes blinkA{50%{opacity:.25}}
+.statusbar .grow{flex:1;min-width:90px}
+.statusbar .acts{display:flex;gap:7px;flex-wrap:wrap}
+.statusbar button{padding:5px 12px;border-radius:9px;font-size:12px;border:1px solid var(--line2);
+  background:linear-gradient(180deg,#232d41,#1a2233);transition:border-color .15s,transform .15s}
+.statusbar button:hover{border-color:var(--gold);transform:translateY(-1px)}
+.statusbar button.ok{background:linear-gradient(180deg,#6fd3a9,#3d9c76);color:#06231a;font-weight:800;border-color:transparent}
+.statusbar button.ember{background:linear-gradient(180deg,#f2b063,#d08830);color:#241503;font-weight:800;border-color:transparent}
+
+.lanes{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lane{position:relative;display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:14px;
+  background:linear-gradient(180deg,rgba(31,40,58,.94),rgba(22,29,43,.94));
+  border:1.5px solid var(--line2);box-shadow:var(--shadow);overflow:hidden;
+  transition:border-color .2s,box-shadow .2s}
+.lane::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:13px;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),transparent 42%)}
+.lane .scene{display:flex;align-items:center;gap:6px;font-size:11px;flex-wrap:wrap;position:relative;z-index:2}
+.lane .scene .snm{font-weight:800;font-size:12px;letter-spacing:.05em}
+.lane .scene .stag{font-size:11px;font-weight:800;padding:1px 8px;border-radius:7px;
+  background:rgba(185,142,230,.15);color:var(--purple);border:1px solid rgba(185,142,230,.35)}
+.lane .scene .stag.church{background:rgba(95,195,154,.15);color:var(--green);border-color:rgba(95,195,154,.4)}
+.lane .scene .stag.street{background:rgba(239,114,134,.15);color:var(--red);border-color:rgba(239,114,134,.4)}
+.lane .scene .stag.city{background:rgba(111,168,224,.15);color:var(--blue);border-color:rgba(111,168,224,.4)}
+.lane .scene .stag.suburb{background:rgba(230,185,94,.15);color:var(--gold);border-color:rgba(230,185,94,.4)}
+.lane .scene .stag.alley{background:rgba(159,176,201,.15);color:var(--fog);border-color:rgba(159,176,201,.4)}
+.lane .scene .stag.tower{background:rgba(185,142,230,.15);color:var(--purple);border-color:rgba(185,142,230,.4)}
+.lane .scene .stp{margin-left:auto;font-size:9.5px;color:var(--ink-faint);text-align:right;line-height:1.2;max-width:52%}
+.lane .ghosts{flex:1 1 auto;min-height:0;display:flex;gap:6px;align-items:center;justify-content:center;
+  border-radius:11px;background:radial-gradient(ellipse at 50% 110%, rgba(185,142,230,.12), rgba(185,142,230,.04) 70%);
+  padding:4px;flex-wrap:wrap;overflow:hidden;position:relative;z-index:2}
+.lane .slotline{flex:0 0 auto;border-radius:12px;border:1.5px dashed var(--line2);min-height:78px;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+  display:flex;align-items:center;justify-content:center;font-size:10.5px;color:var(--ink-faint);text-align:center;
+  padding:4px;transition:all .2s;position:relative;z-index:2}
+.lane.canmove{border-color:var(--blue);box-shadow:0 0 0 3px rgba(111,168,224,.22),var(--shadow)}
+.lane.candeploy{border-color:var(--blue);animation:bluePulse 1.2s ease-in-out infinite}
+@keyframes bluePulse{0%,100%{box-shadow:0 0 0 0 rgba(111,168,224,.5)}50%{box-shadow:0 0 0 9px rgba(111,168,224,0)}}
+.lane.underAI{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,114,134,.25),var(--shadow)}
+.lane.sceneFlash{border-color:var(--green);box-shadow:0 0 0 4px rgba(95,195,154,.4),var(--shadow)}
+.lane.sceneFlash::after{content:attr(data-scene-fx);position:absolute;top:8px;right:10px;font-size:11px;font-weight:800;
+  color:var(--green);background:rgba(95,195,154,.18);padding:2px 8px;border-radius:7px;pointer-events:none;
+  animation:fxBadge 1.5s ease forwards;z-index:5}
+@keyframes fxBadge{0%{opacity:0;transform:translateY(-6px)}20%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+
+/* ============ 敌人 ============ */
+.foe{position:relative;width:76px;flex:0 0 auto;border-radius:12px;padding:5px 4px 6px;
+  background:linear-gradient(180deg,#242e44,#191f30);
+  border:1.5px solid var(--line2);text-align:center;
+  transition:transform .15s,border-color .15s,box-shadow .15s}
+.foe.spawn{animation:tokIn .35s cubic-bezier(.2,.9,.3,1.5) both}
+@keyframes tokIn{from{transform:scale(.6) translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.foe.target{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,114,134,.35),0 0 20px rgba(239,114,134,.28);
+  cursor:pointer;animation:redPulse 1s ease-in-out infinite}
+@keyframes redPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,114,134,.5),0 0 20px rgba(239,114,134,.25)}
+  50%{box-shadow:0 0 0 9px rgba(239,114,134,0),0 0 20px rgba(239,114,134,.25)}}
+.foe.hurt{animation:hurtA .4s ease}
+@keyframes hurtA{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.foe.reveal{animation:revealA .6s ease}
+@keyframes revealA{0%{filter:brightness(3) saturate(0)}60%{filter:brightness(1.5)}100%{filter:none}}
+.foe .ficon{width:40px;height:40px;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center}
+.foe .ficon svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.65))}
+.foe.hound{border-color:rgba(200,69,79,.65)}
+.foe.hound .ficon svg{filter:drop-shadow(0 0 8px rgba(224,96,109,.45)) drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+.foe.lord{border-color:#b02a36;box-shadow:0 0 20px rgba(200,40,60,.4);
+  background:linear-gradient(180deg,#2c1420,#1a0c14)}
+.foe.lord .ficon svg{filter:drop-shadow(0 0 12px rgba(255,90,110,.55)) drop-shadow(0 3px 7px rgba(0,0,0,.7))}
+.foe.lord .fname{color:#ffc2cd}
+.foe.stealth{border-color:#39415a;background:linear-gradient(180deg,#1d2431,#141a26)}
+.foe.stealth .ficon svg{filter:grayscale(1) brightness(.42) blur(.6px)}
+.foe.stealth .ficon::after{content:'？';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:900;color:#aab3c8;text-shadow:0 0 10px rgba(0,0,0,.95)}
+.foe .fname{font-size:10px;font-weight:800;margin-top:3px}
+.foe .fstat{display:flex;justify-content:center;gap:4px;font-size:9px;color:var(--ink-dim);margin-top:2px}
+.foe .fstat b{color:var(--red)}
+.foe .ftag{font-size:8.5px;font-weight:800;color:var(--fog);margin-top:2px;line-height:1.2}
+.foe .hpd{display:flex;gap:2px;justify-content:center;margin-top:3px}
+.foe .hpd i{width:7px;height:3px;border-radius:2px;background:linear-gradient(90deg,#ff8a99,#c8454f)}
+.foe .hpd i.off{background:var(--line2)}
+
+/* ============ 门番 ============ */
+.unit{position:relative;width:88px;border-radius:12px;padding:5px;
+  background:linear-gradient(180deg,#2a3450,#1d2536);
+  border:1.5px solid var(--purple);text-align:center;cursor:pointer;
+  transition:transform .15s,border-color .15s,box-shadow .15s;
+  box-shadow:0 0 16px rgba(185,142,230,.16)}
+.unit.spawn{animation:tokIn .35s cubic-bezier(.2,.9,.3,1.5) both}
+.unit:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 0 22px rgba(230,185,94,.32)}
+.unit.sel{border-color:var(--gold);box-shadow:0 0 0 3px rgba(230,185,94,.32),0 0 24px rgba(230,185,94,.28)}
+.unit.spent{opacity:.6}
+.unit.hurt{animation:hurtA .4s ease}
+.unit.heal{animation:healA .6s ease}
+@keyframes healA{0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(185,142,230,.16)}
+  40%{transform:scale(1.08);box-shadow:0 0 0 7px rgba(95,195,154,.4)}}
+.unit .fig{height:40px;display:flex;align-items:center;justify-content:center}
+.unit .fig svg{height:100%}
+.unit .uname{font-size:11px;font-weight:800;margin-top:2px}
+.unit .ustat{font-size:9px;color:var(--ink-dim);margin-top:2px;display:flex;justify-content:center;gap:5px}
+.unit .ustat b{color:var(--gold)}
+.unit .hpd{display:flex;gap:2px;justify-content:center;margin-top:3px}
+.unit .hpd i{width:8px;height:3.5px;border-radius:2px;background:linear-gradient(90deg,#8fe0bb,#3d9c76)}
+.unit .hpd i.off{background:var(--line2)}
+.unit .sex{position:absolute;top:-7px;left:-5px;font-size:8.5px;font-weight:800;border-radius:6px;padding:0 5px;
+  background:var(--panel3);color:var(--ink-dim)}
+.unit .sex.m{background:#2f4a6b;color:#bcd6f2}
+.unit .sex.f{background:#5a3350;color:#f2c7e2}
+.unit .buff{position:absolute;top:-8px;right:-5px;font-size:8.5px;font-weight:800;border-radius:6px;padding:0 5px;
+  background:linear-gradient(180deg,#f0d38a,#c9a24a);color:#2a1f08;border:1px solid #8a6a1c}
+
+.handbar{flex:0 0 auto;background:linear-gradient(180deg,rgba(31,40,58,.95),rgba(22,29,43,.95));
+  border:1px solid var(--line);border-radius:14px;padding:6px 9px;box-shadow:var(--shadow)}
+.handbar .ht{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--ink-faint);margin-bottom:4px;flex-wrap:wrap}
+.handbar .ht .resting{color:var(--ember);font-weight:700}
+.handbar .ht .legend{margin-left:auto}
+.hand{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:3px 2px 7px;min-height:150px;align-items:flex-start;
+  -webkit-overflow-scrolling:touch}
+.hand::-webkit-scrollbar{height:6px}
+.hand::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
+.card{position:relative;flex:0 0 auto;width:106px;height:136px;border-radius:12px;padding:7px 8px;cursor:grab;touch-action:none;
+  display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(168deg,#28334a,#1a2131);border:1.5px solid var(--line2);
+  box-shadow:0 6px 16px rgba(0,0,0,.5);
+  transition:transform .15s,border-color .15s,box-shadow .15s;will-change:transform}
+.card::before{content:'';position:absolute;inset:0;border-radius:11px;pointer-events:none;
+  background:linear-gradient(158deg,rgba(255,255,255,.08),transparent 46%)}
+.card.deal{animation:dealA .45s cubic-bezier(.2,.9,.3,1.15) both}
+@keyframes dealA{from{opacity:0;transform:translateY(36px) scale(.88)}to{opacity:1;transform:none}}
+.card:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 12px 28px rgba(0,0,0,.6),0 0 22px rgba(230,185,94,.2);z-index:3}
+.card.spell{border-color:#2f4a6b}
+.card.spell:hover{border-color:var(--blue);box-shadow:0 12px 28px rgba(0,0,0,.6),0 0 22px rgba(111,168,224,.25)}
+.card.sel{border-color:var(--gold);box-shadow:0 0 0 3px rgba(230,185,94,.3),0 0 26px rgba(230,185,94,.28)}
+.card.poor{filter:saturate(.45) brightness(.8)}
+.card.resting{filter:saturate(.3) brightness(.72)}
+.card .rest{position:absolute;right:6px;bottom:6px;font-size:8.5px;font-weight:800;padding:1px 5px;border-radius:5px;
+  background:rgba(232,160,76,.2);color:var(--ember);border:1px solid rgba(232,160,76,.45)}
+.card.is-dragging{opacity:.25}
+.drag-ghost{position:fixed;z-index:330;pointer-events:none;margin:0;transition:none!important;
+  box-shadow:0 22px 48px rgba(0,0,0,.65);border-color:var(--gold)!important}
+.card .ctop{display:flex;align-items:center;justify-content:space-between;flex:0 0 auto;position:relative;z-index:2}
+.card .cost{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;
+  font-weight:900;color:#0b1520;background:linear-gradient(180deg,#9ecdf5,#5b8fd0);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.card .glyph{font-size:16px}
+.card .cname{font-size:12px;font-weight:800;margin-top:2px;flex:0 0 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  position:relative;z-index:2}
+.card .ctag{font-size:8.5px;color:var(--ink-faint);flex:0 0 auto;margin-top:1px;position:relative;z-index:2}
+.card .ctext{margin-top:4px;font-size:9.5px;line-height:1.42;color:var(--ink-dim);
+  flex:1 1 auto;overflow:hidden;position:relative;z-index:2;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+
+.shieldwrap{flex:0 0 auto;display:flex;align-items:center;gap:9px;
+  background:linear-gradient(180deg,rgba(31,40,58,.95),rgba(22,29,43,.95));
+  border:1px solid var(--line);border-radius:13px;padding:6px 11px;box-shadow:var(--shadow)}
+.shieldwrap .lb{font-size:11px;color:var(--ink-dim);white-space:nowrap}
+.shieldbar{display:flex;gap:3px;flex:1}
+.sseg{flex:1;height:13px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);transition:all .3s}
+.sseg.on{background:linear-gradient(180deg,#9ef0c8,#2f8a63);border-color:#26714f;box-shadow:0 0 8px rgba(95,195,154,.35)}
+.sseg.crack{animation:crackA .5s ease}
+@keyframes crackA{0%{transform:translate(0,0);filter:brightness(2.8)}30%{transform:translate(-4px,3px)}60%{transform:translate(4px,-3px)}100%{transform:translate(0,0)}}
+.sseg.heal{animation:healSeg .6s ease}
+@keyframes healSeg{0%{transform:scale(1);filter:brightness(1)}40%{transform:scale(1.4);filter:brightness(2.4)}100%{transform:scale(1);filter:brightness(1)}}
+.guard{font-size:11px;font-weight:800;color:var(--blue);border:1px solid rgba(111,168,224,.5);
+  background:rgba(111,168,224,.13);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.guard.off{display:none}
+.piles{display:flex;gap:7px;align-items:center}
+.pile{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:9px;
+  background:linear-gradient(180deg,#232d41,#1a2233);border:1px solid var(--line);font-size:11px;color:var(--ink-dim)}
+.pile b{color:var(--ink);font-size:13px}
+
+#dlg{position:fixed;left:0;right:0;top:106px;z-index:240;display:none;justify-content:center;padding:0 12px;pointer-events:none}
+#dlg.on{display:flex;animation:dlgIn .26s cubic-bezier(.2,.8,.3,1)}
+@keyframes dlgIn{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
+#dlg .box{pointer-events:auto;display:flex;gap:15px;align-items:flex-start;width:100%;max-width:700px;
+  background:linear-gradient(180deg,rgba(34,43,62,.99),rgba(22,29,43,.99));border:1px solid var(--line2);
+  border-radius:17px;padding:15px 19px;box-shadow:var(--shadow-lg);cursor:pointer;position:relative}
+#dlg .av{width:70px;height:86px;flex:0 0 auto;filter:drop-shadow(0 6px 13px rgba(0,0,0,.6))}
+#dlg .av svg{width:100%;height:100%}
+#dlg .nm{font-size:15px;font-weight:800;color:var(--purple);letter-spacing:.1em;margin-bottom:5px}
+#dlg .tx{font-size:16.5px;line-height:1.6}
+#dlg .nx{position:absolute;right:19px;bottom:9px;font-size:11px;color:var(--ink-faint);animation:blinkA 1.4s infinite}
+
+.banner{position:fixed;left:0;right:0;top:32%;z-index:245;pointer-events:none;text-align:center;opacity:0;transition:opacity .25s}
+.banner.on{opacity:1}
+.banner span{display:inline-block;padding:12px 30px;border-radius:15px;font-size:18px;font-weight:800;letter-spacing:.14em;
+  background:rgba(20,10,16,.94);border:1px solid rgba(239,114,134,.6);color:#ffc2cd;box-shadow:0 14px 44px rgba(0,0,0,.8)}
+.banner.wx span{background:rgba(10,16,28,.95);border-color:rgba(111,168,224,.8);color:#cde3ff;box-shadow:0 14px 44px rgba(20,50,100,.6)}
+.banner.scene span{background:rgba(10,20,16,.95);border-color:rgba(95,195,154,.8);color:#c8f0dd;box-shadow:0 14px 44px rgba(20,80,60,.5)}
+.banner.ember span{background:rgba(24,16,8,.95);border-color:rgba(232,160,76,.9);color:#ffd9a8;box-shadow:0 14px 44px rgba(120,70,20,.55)}
+.banner.enemy span{background:rgba(26,8,12,.95);border-color:rgba(239,114,134,.85);color:#ffc2cd;box-shadow:0 14px 44px rgba(120,20,40,.6)}
+.banner.night span{background:rgba(16,12,30,.95);border-color:rgba(185,142,230,.85);color:#d9c8ff;box-shadow:0 14px 44px rgba(70,40,130,.6)}
+
+.panel{position:fixed;inset:0;z-index:320;display:none;align-items:center;justify-content:center;padding:18px;
+  background:rgba(6,9,16,.74);backdrop-filter:blur(5px)}
+.panel.on{display:flex;animation:sIn .2s ease}
+.panel .boxx{width:100%;max-width:510px;max-height:90vh;overflow:auto;
+  background:linear-gradient(180deg,#1f2839,#151d2a);
+  border:1px solid var(--line2);border-radius:18px;
+  box-shadow:var(--shadow-lg);padding:20px 22px}
+.panel h3{font-size:18px;margin-bottom:4px}
+.panel .sub{font-size:12px;color:var(--ink-faint);margin-bottom:10px}
+.panel .eff{font-size:13.5px;line-height:1.7;background:rgba(255,255,255,.04);border-radius:11px;padding:10px 12px;margin:10px 0;
+  border:1px solid rgba(255,255,255,.05)}
+.panel .foot{display:flex;gap:9px;margin-top:13px}
+.panel .foot button{flex:1;padding:11px;border-radius:12px;font-size:13.5px;font-weight:700;border:1px solid var(--line2);
+  background:linear-gradient(180deg,#232d41,#1a2233);transition:border-color .15s,transform .15s}
+.panel .foot button:hover:not(:disabled){transform:translateY(-1px);border-color:var(--gold)}
+.panel .foot .go{background:linear-gradient(180deg,#5385c2,#2d5585);color:#fff;border-color:transparent}
+.panel .foot .go:disabled{background:var(--panel2);color:var(--ink-faint);cursor:not-allowed}
+.panel .foot .back{background:linear-gradient(180deg,#8a5566,#5a3340);color:#fff;border-color:transparent}
+.panel .foot .back:disabled{background:var(--panel2);color:var(--ink-faint);cursor:not-allowed}
+.panel .upgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.panel .upgrid.one{grid-template-columns:1fr}
+.panel .upb{border:1px solid var(--line2);border-radius:12px;padding:10px;text-align:left;transition:border-color .15s,transform .15s;
+  background:linear-gradient(180deg,#232d41,#1a2233)}
+.panel .upb:hover:not(:disabled){border-color:var(--ember);transform:translateY(-1px)}
+.panel .upb:disabled{opacity:.42;cursor:not-allowed}
+.panel .upb b{display:block;font-size:13px;margin-bottom:3px}
+.panel .upb small{font-size:10.5px;color:var(--ink-dim);display:block;line-height:1.35}
+.panel .upb .pz{font-size:10.5px;color:var(--ember);font-weight:800;margin-top:4px;display:block}
+.panel .upb .pz.no{color:var(--red)}
+
+#toasts{position:fixed;top:56px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;
+  gap:6px;align-items:center;pointer-events:none;width:max-content;max-width:92vw}
+.toast{max-width:min(92vw,430px);padding:10px 16px;border-radius:11px;font-size:13px;line-height:1.5;text-align:center;
+  background:linear-gradient(180deg,rgba(34,43,62,.98),rgba(23,31,47,.98));
+  border:1px solid var(--line2);border-left:4px solid var(--blue);box-shadow:var(--shadow-lg);
+  opacity:0;transform:translateY(-12px) scale(.95);transition:opacity .2s,transform .24s cubic-bezier(.2,.9,.3,1.35)}
+.toast.in{opacity:1;transform:none}
+.toast.out{opacity:0;transform:translateY(-8px) scale(.97)}
+.toast.ok{border-left-color:var(--green)} .toast.warn{border-left-color:var(--gold)} .toast.bad{border-left-color:var(--red)}
+#fxLayer{position:fixed;inset:0;pointer-events:none;z-index:150;overflow:hidden}
+.fx-drop{position:absolute;top:-40px;width:3px;height:26px;border-radius:2px;
+  background:linear-gradient(180deg,rgba(120,170,230,0),rgba(90,140,210,.95));animation:dropA linear forwards}
+@keyframes dropA{0%{transform:translateY(-40px);opacity:0}12%{opacity:1}100%{transform:translateY(112vh);opacity:.05}}
+.fx-dome{position:fixed;left:0;right:0;bottom:0;height:40vh;pointer-events:none;z-index:151;
+  background:radial-gradient(ellipse 70% 100% at 50% 100%,rgba(95,195,154,.4),transparent 70%);
+  animation:domeA 1.2s ease-out forwards}
+@keyframes domeA{0%{opacity:0;transform:translateY(30px) scale(.85)}30%{opacity:1}100%{opacity:0;transform:translateY(0) scale(1.06)}}
+.floatnum{position:fixed;font-size:20px;font-weight:900;color:var(--purple);pointer-events:none;z-index:160;
+  text-shadow:0 2px 12px rgba(0,0,0,.95);animation:floatUp 1.05s ease-out forwards;transform:translate(-50%,-50%)}
+.floatnum.good{color:var(--green)} .floatnum.bad{color:var(--red)} .floatnum.ember{color:var(--ember)}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,-20%) scale(.6)}18%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}
+  75%{opacity:1}100%{opacity:0;transform:translate(-50%,-200%) scale(1)}}
+
+#coach{position:fixed;inset:0;z-index:400;display:none}
+#coach.on{display:block}
+#spot{position:absolute;border-radius:14px;border:3px solid var(--gold);pointer-events:none;
+  box-shadow:0 0 0 9999px var(--veil),0 0 0 9px rgba(230,185,94,.22),0 0 34px rgba(230,185,94,.5);
+  animation:spotA 1.7s ease-in-out infinite}
+@keyframes spotA{0%,100%{box-shadow:0 0 0 9999px var(--veil),0 0 0 9px rgba(230,185,94,.22),0 0 34px rgba(230,185,94,.5)}
+  50%{box-shadow:0 0 0 9999px var(--veil),0 0 0 15px rgba(230,185,94,.12),0 0 52px rgba(230,185,94,.7)}}
+#coachBubble{position:absolute;max-width:350px;
+  background:linear-gradient(180deg,#232d41,#171f2d);
+  border:1px solid var(--line2);border-radius:16px;
+  box-shadow:var(--shadow-lg);padding:15px 17px;z-index:2;animation:sIn .2s ease}
+#coachBubble h4{font-size:15.5px;margin-bottom:6px}
+#coachBubble p{font-size:13px;line-height:1.75;color:var(--ink-dim)}
+#coachBubble b{color:var(--ink)}
+#coachBubble .ccb{display:flex;gap:8px;align-items:center;margin-top:12px}
+#coachBubble .stp{margin-right:auto;font-size:11px;color:var(--ink-faint)}
+#coachBubble button{padding:7px 13px;border-radius:10px;font-size:12.5px;border:1px solid var(--line2);
+  background:linear-gradient(180deg,#232d41,#1a2233)}
+#coachBubble button.go{background:linear-gradient(180deg,#c39cf0,#7a58a8);color:#151a26;border-color:transparent;font-weight:800}
+
+.modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:18px;
+  background:rgba(6,9,16,.72);backdrop-filter:blur(4px)}
+.modal.active{display:flex;animation:sIn .2s ease}
+.modal .sheet{width:100%;max-width:860px;max-height:88vh;overflow:auto;
+  background:linear-gradient(180deg,#1e2738,#151c29);
+  border:1px solid var(--line2);border-radius:19px;box-shadow:var(--shadow-lg);padding:22px 24px;-webkit-overflow-scrolling:touch}
+.modal h2{font-size:19px;margin-bottom:10px}
+.modal h3{font-size:15px;margin:18px 0 7px;color:var(--purple)}
+.modal h4{font-size:13.5px;margin:14px 0 5px;color:var(--gold)}
+.modal p,.modal li{font-size:13px;line-height:1.8;color:var(--ink-dim)}
+.modal ul,.modal ol{padding-left:20px} .modal b{color:var(--ink)}
+.modal table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px}
+.modal th,.modal td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+.modal th{background:rgba(255,255,255,.04)}
+.modal .close{display:block;width:100%;margin-top:18px;padding:11px;border-radius:12px;
+  background:linear-gradient(180deg,#6fa8e0,#3a6fa5);color:#08131f;font-weight:800;font-size:13.5px}
+.why{border-left:3px solid var(--gold);background:rgba(230,185,94,.07);border-radius:0 10px 10px 0;padding:9px 13px;margin:8px 0}
+.why b{color:var(--gold)}
+.kbd{display:inline-block;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:11px;background:var(--panel2)}
+
+#pdfBox{position:fixed;inset:0;z-index:365;display:none;align-items:center;justify-content:center;padding:20px;
+  background:rgba(6,9,16,.8);backdrop-filter:blur(5px)}
+#pdfBox.on{display:flex;animation:sIn .2s ease}
+#pdfBox .bx{width:100%;max-width:430px;background:linear-gradient(180deg,#1f2839,#151d2a);
+  border:1px solid var(--line2);border-radius:17px;padding:20px 22px;box-shadow:var(--shadow-lg);text-align:center}
+#pdfBox h3{font-size:17px;margin-bottom:8px}
+#pdfBox p{font-size:12.5px;line-height:1.75;color:var(--ink-dim);margin-bottom:14px}
+#pdfBox .row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+#pdfBox button{padding:11px 16px;border-radius:12px;font-size:13.5px;font-weight:700;border:1px solid var(--line2);
+  background:linear-gradient(180deg,#232d41,#1a2233)}
+#pdfBox button:disabled{opacity:.4;cursor:not-allowed}
+#pdfBox button.go{background:linear-gradient(180deg,#5385c2,#2d5585);color:#fff;border-color:transparent}
+
+#result{position:fixed;inset:0;z-index:350;display:none;align-items:center;justify-content:center;padding:20px;
+  background:rgba(6,9,16,.78);backdrop-filter:blur(5px)}
+#result.on{display:flex;animation:sIn .3s ease}
+#result .rbox{text-align:center;max-width:550px;
+  background:linear-gradient(180deg,#1f2839,#151d2a);
+  border-radius:20px;border:1px solid var(--line2);box-shadow:var(--shadow-lg);padding:28px 26px}
+#result .rt{font-size:25px;letter-spacing:.18em;padding-left:.18em;font-weight:800;margin-bottom:12px}
+#result .rt.win{color:var(--green);text-shadow:0 0 30px rgba(95,195,154,.5)}
+#result .rt.lose{color:var(--red);text-shadow:0 0 30px rgba(239,114,134,.5)}
+#result .rp{font-size:13.5px;line-height:1.95;color:var(--ink-dim);margin-bottom:16px}
+#result .rstat{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+#result .rstat div{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:11px;padding:9px 13px;
+  font-size:11.5px;color:var(--ink-dim)}
+#result .rstat b{display:block;font-size:19px;color:var(--ink)}
+
+#scr-table{padding:18px;overflow:auto;background:var(--bg);-webkit-overflow-scrolling:touch}
+.twrap{max-width:1000px;margin:0 auto;padding-bottom:50px}
+#scr-table h2{font-size:19px;margin:6px 0 10px}
+#scr-table h3{font-size:15px;margin:18px 0 7px;color:var(--purple)}
+#scr-table h4{font-size:13.5px;margin:14px 0 5px;color:var(--gold)}
+#scr-table p,#scr-table li{font-size:13px;line-height:1.8;color:var(--ink-dim)}
+#scr-table b{color:var(--ink)} #scr-table ul,#scr-table ol{padding-left:20px}
+.tbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;position:sticky;top:0;z-index:5;
+  background:linear-gradient(180deg,var(--bg) 74%,transparent);padding:10px 0}
+.print-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:10px;margin-top:12px}
+.pcard{border:1.5px solid #7b52ab;border-radius:12px;padding:10px;background:#fbfbfe;color:#1a2030;min-height:150px;display:flex;flex-direction:column;gap:5px}
+.pcard.spell{border-color:#3c6ea6}
+.pcard.scene{border-color:#c98a2c}
+.pcard .ptop{display:flex;justify-content:space-between;align-items:center}
+.pcard .pcost{width:23px;height:23px;border-radius:50%;background:#35608f;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:11.5px}
+.pcard .pname{font-size:15px;font-weight:900}
+.pcard .ptag{font-size:9.5px;color:#5b6480}
+.pcard .peff{font-size:11px;line-height:1.5;color:#333c50}
+.pcard .pfoot{font-size:9px;color:#8b93a8;border-top:1px dashed #c2cbdf;padding-top:5px;margin-top:auto}
+#scr-table table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+#scr-table th,#scr-table td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+#scr-table th{background:rgba(255,255,255,.04)}
+.tokrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tok{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;border:1.5px solid #b9a06a;background:#fdf6e6;color:#7a6320;text-align:center;line-height:1.1}
+.tok.g{border-color:#9573cd;background:#f3ecfd;color:#5c3a86;font-size:13px}
+.tok.e{border-color:#c8454f;background:#fdeef0;color:#a33540}
+.tok.s{border-color:#39415a;background:#2a3143;color:#cfd6e6;font-size:13px}
+.tok.b{border-color:#a8232f;background:#7d1a24;color:#fff;font-size:9.5px}
+.kit{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:10px}
+.kit div{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:12.5px}
+.kit b{display:block;margin-bottom:3px}
+
+@media (orientation:portrait) and (max-width:900px){
+  #scr-game{padding:4px 6px 5px;gap:4px}
+  .topbar{padding:3px 7px;border-radius:10px;gap:5px}
+  .stats{gap:3px}
+  .stat{padding:2px 6px;border-radius:7px}
+  .stat .lb{font-size:9px} .stat .vl{font-size:12.5px} .stat .mx{font-size:8px}
+  .topbtns{gap:4px}
+  .tbtn{padding:5px 8px;font-size:10.5px;border-radius:8px}
+  .weatherbar{padding:3px 8px;font-size:10.5px;gap:5px;border-radius:9px}
+  .weatherbar .wtag{font-size:11.5px;padding:1px 8px}
+  .weatherbar .wd{display:none}
+  .weatherbar .wsep{display:none}
+  .weatherbar .scn{font-size:10px;gap:5px}
+  .weatherbar .ai{font-size:10px}
+  .statusbar{padding:3px 8px;font-size:10.5px;min-height:26px;gap:5px;border-radius:9px}
+  .statusbar button{padding:3px 8px;font-size:10px}
+  .lanes{gap:5px}
+  .lane{padding:5px;gap:4px;border-radius:11px}
+  .lane .scene{font-size:9.5px;gap:3px;flex-wrap:nowrap;overflow:hidden}
+  .lane .scene .snm{font-size:9.5px;white-space:nowrap}
+  .lane .scene .stag{font-size:9px;padding:0 5px;white-space:nowrap}
+  .lane .scene .stp{display:block;font-size:7.5px;max-width:100%;margin-left:0;text-align:left;line-height:1.1;color:var(--ink-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lane .ghosts{padding:3px;gap:4px}
+  .lane .slotline{min-height:58px;font-size:9.5px}
+  .unit{width:70px;padding:3px;border-radius:9px}
+  .unit .fig{height:28px}
+  .unit .uname{font-size:9.5px}
+  .unit .ustat{font-size:8px;gap:3px}
+  .unit .sex{font-size:7.5px;padding:0 4px} .unit .buff{font-size:7.5px;padding:0 4px}
+  .unit .hpd i{width:6px;height:3px}
+  .foe{width:58px;padding:3px;border-radius:9px}
+  .foe .ficon{width:30px;height:30px}
+  .foe .fname{font-size:8.5px} .foe .fstat{font-size:7.5px;gap:2px}
+  .foe .ftag{display:none} .foe .hpd i{width:5px;height:2.5px}
+  .shieldwrap{padding:3px 8px;gap:5px;border-radius:9px}
+  .shieldwrap .lb{font-size:9.5px}
+  .sseg{height:10px}
+  .guard{font-size:9.5px;padding:0 5px}
+  .pile{padding:2px 6px;font-size:9.5px} .pile b{font-size:11px}
+  .handbar{padding:4px 6px;border-radius:10px}
+  .handbar .ht{font-size:9px;margin-bottom:2px;gap:5px}
+  .handbar .ht .legend{display:none}
+  .hand{gap:5px;min-height:100px;padding:2px 1px 3px}
+  .card{width:88px;height:112px;padding:5px 6px;border-radius:10px}
+  .card .cost{width:16px;height:16px;font-size:10px}
+  .card .glyph{font-size:12px}
+  .card .cname{font-size:10.5px;margin-top:1px}
+  .card .ctag{display:none}
+  .card .ctext{margin-top:2px;font-size:8px;line-height:1.3;-webkit-line-clamp:5}
+  .card .rest{font-size:7px;padding:0 3px;right:3px;bottom:3px}
+  #dlg{top:auto;bottom:6px;padding:0 6px}
+  #dlg .box{padding:9px 12px;gap:10px;border-radius:14px}
+  #dlg .av{width:44px;height:54px}
+  #dlg .nm{font-size:12px;margin-bottom:2px}
+  #dlg .tx{font-size:13px}
+  .banner span{font-size:14px;padding:9px 20px}
+  .panel .boxx{padding:14px 16px;border-radius:14px}
+  #scr-title{padding:3vh 4vw}
+  .title-quote{display:none}
+  .title-main{font-size:clamp(26px,9vw,44px)}
+  .btn{padding:10px 16px;font-size:14px}
+  #scr-table{padding:12px}
+}
+@media (orientation:landscape) and (max-height:620px){
+  #scr-game{padding:3px 5px 4px;gap:3px}
+  .topbar{padding:2px 6px;border-radius:9px;gap:4px}
+  .stat{padding:2px 5px;border-radius:6px;gap:3px}
+  .stat .lb{font-size:8px} .stat .vl{font-size:11px} .stat .mx{font-size:7px}
+  .topbtns{gap:3px}
+  .tbtn{padding:3px 7px;font-size:9.5px;border-radius:7px}
+  .weatherbar{padding:2px 7px;font-size:9.5px;gap:5px;border-radius:9px}
+  .weatherbar .wtag{font-size:10.5px;padding:1px 7px}
+  .weatherbar .wd{display:none}
+  .weatherbar .wsep{display:none}
+  .weatherbar .scn{font-size:9px;gap:5px}
+  .weatherbar .ai{font-size:9px}
+  .statusbar{padding:2px 7px;font-size:9.5px;min-height:22px;gap:5px;border-radius:9px}
+  .statusbar button{padding:2px 7px;font-size:9px}
+  .lanes{gap:4px}
+  .lane{padding:4px;gap:3px;border-radius:10px}
+  .lane .scene{font-size:8.5px;gap:3px;flex-wrap:nowrap;overflow:hidden}
+  .lane .scene .snm{font-size:9px;white-space:nowrap}
+  .lane .scene .stag{font-size:8.5px;padding:0 5px;white-space:nowrap}
+  .lane .scene .stp{display:block;font-size:7px;max-width:100%;margin-left:0;text-align:left;line-height:1.1;color:var(--ink-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lane .ghosts{padding:2px;gap:3px}
+  .lane .slotline{min-height:48px;font-size:8.5px}
+  .foe{width:50px;padding:2px;border-radius:7px}
+  .foe .ficon{width:24px;height:24px}
+  .foe .fname{font-size:7px;margin-top:1px;line-height:1.1}
+  .foe .fstat{font-size:6.5px;gap:1px;margin-top:1px;line-height:1.1}
+  .foe .ftag{display:none}
+  .foe .hpd{margin-top:1px;gap:1px}
+  .foe .hpd i{width:4px;height:2px}
+  .unit{width:60px;padding:2px;border-radius:8px}
+  .unit .fig{height:24px}
+  .unit .uname{font-size:8.5px;margin-top:1px}
+  .unit .ustat{font-size:7px;gap:2px;margin-top:1px}
+  .unit .hpd{margin-top:1px;gap:1px}
+  .unit .hpd i{width:5px;height:2.5px}
+  .unit .sex{font-size:7px;padding:0 3px;top:-5px;left:-3px}
+  .unit .buff{font-size:7px;padding:0 3px;top:-6px;right:-3px}
+  .shieldwrap{padding:2px 7px;gap:5px;border-radius:9px}
+  .shieldwrap .lb{font-size:9px}
+  .sseg{height:9px}
+  .guard{font-size:8.5px;padding:0 5px}
+  .pile{padding:2px 5px;font-size:8.5px} .pile b{font-size:10px}
+  .handbar{padding:3px 5px;border-radius:9px}
+  .handbar .ht{font-size:8.5px;margin-bottom:1px;gap:4px}
+  .handbar .ht .legend{display:none}
+  .hand{gap:4px;min-height:76px;padding:1px 1px 2px;overflow-x:auto}
+  .card{width:64px;height:80px;padding:4px 4px;border-radius:8px}
+  .card .cost{width:13px;height:13px;font-size:8px}
+  .card .glyph{font-size:10px}
+  .card .cname{font-size:8.5px;margin-top:1px}
+  .card .ctag{display:none}
+  .card .ctext{margin-top:2px;font-size:7px;line-height:1.2;-webkit-line-clamp:4}
+  .card .rest{font-size:6px;padding:0 3px;right:3px;bottom:3px}
+  #dlg{top:auto;bottom:5px;padding:0 5px}
+  #dlg .box{padding:7px 10px;gap:8px;border-radius:12px}
+  #dlg .av{width:36px;height:44px}
+  #dlg .nm{font-size:11px;margin-bottom:2px}
+  #dlg .tx{font-size:11.5px}
+  #dlg .nx{font-size:8px;right:10px;bottom:4px}
+  #toasts{top:6px}
+  .toast{font-size:10.5px;padding:5px 10px;max-width:min(94vw,360px)}
+  .banner span{font-size:13px;padding:8px 18px}
+  .panel .boxx{padding:12px 14px;border-radius:13px}
+  .panel h3{font-size:14px} .panel .eff{font-size:11px;padding:7px 9px}
+  .panel .foot button{font-size:11px;padding:8px}
+  .panel .upb b{font-size:11.5px} .panel .upb small{font-size:9px}
+  .modal .sheet{padding:12px 14px;border-radius:13px}
+  .modal h2{font-size:15px} .modal p,.modal li{font-size:11px}
+  #pdfBox .bx{padding:12px 14px}
+  #coachBubble{max-width:280px;padding:10px 12px}
+  #coachBubble h4{font-size:12.5px} #coachBubble p{font-size:11px}
+  #result .rbox{padding:16px 14px} #result .rt{font-size:18px} #result .rp{font-size:11.5px}
+  #scr-title{padding:2vh 4vw}
+  .title-quote{display:none}
+  .title-main{font-size:clamp(22px,6vw,36px)}
+  .title-sub{font-size:10px} .title-kicker{font-size:9px;margin-bottom:5px}
+  .btn{padding:7px 12px;font-size:12px}
+  .opt-row{margin-top:8px;font-size:10px}
+  .title-foot{margin-top:8px;font-size:9px}
+  #scr-table{padding:8px}
+}
+@media print{
+  html,body{overflow:visible!important;height:auto!important;background:#fff!important;color:#000!important}
+  #app>*{display:none!important}
+  #app>#scr-table{display:block!important;position:static!important;overflow:visible!important;height:auto!important;padding:0}
+  .no-print{display:none!important}
+  .twrap{max-width:none}
+  .screen{position:static!important;animation:none!important}
+  .pcard,.kit{page-break-inside:avoid}
+  .modal table,#scr-table table{color:#000}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<section class="screen" id="scr-boot">
+  <div class="boot-inner">
+    <span class="boot-mark">世纪末歌</span>
+    <span class="boot-sub">SANCTUARY · ECHOES</span>
+    <div class="boot-bar"><i></i></div>
+    <div class="boot-tip" id="bootTip">正在唤醒圣域…</div>
+  </div>
+</section>
+
+<section class="screen" id="scr-title">
+  <div class="title-wrap">
+    <span class="title-kicker">雨夜 · 三更</span>
+    <span class="title-main">圣域余响</span>
+    <span class="title-sub">九张卡 · 三条线 · 守住圣域</span>
+    <p class="title-quote">“雨会让隐身的幽灵显出轮廓。<br>所以德尔塔一直在等下雨。”</p>
+    <div class="title-btns">
+      <button class="btn primary big" id="btnPlay">开始游戏</button>
+      <button class="btn" id="btnHowto">新手引导</button>
+      <button class="btn" id="btnRules">规则与设定</button>
+      <button class="btn" id="btnTableGo">线下实体版</button>
+    </div>
+    <div class="opt-row">
+      <span>难度</span>
+      <div class="seg" id="diffSeg">
+        <button data-d="novice">新手</button><button data-d="normal">通常</button>
+      </div>
+    </div>
+    <div class="opt-row" style="margin-top:10px"><span id="optNote" style="font-size:11.5px"></span></div>
+    <div class="title-foot">手机横竖屏都能玩 · 4 名门番 · 5 张法术 · 三条线永远留 1 人待命</div>
+  </div>
+</section>
+
+<section class="screen" id="scr-game">
+  <header class="topbar">
+    <div class="stats">
+      <div class="stat n"><span class="lb">夜晚</span><span class="vl" id="sNight">一</span></div>
+      <div class="stat"><span class="lb">回合</span><span class="vl" id="sRound">1</span><span class="mx" id="sRoundMax">/15</span></div>
+      <div class="stat e"><span class="lb">回响</span><span class="vl" id="sEcho">5</span></div>
+      <div class="stat s" id="statShield"><span class="lb">护盾</span><span class="vl" id="sShield">10</span><span class="mx" id="sShieldMax">/10</span></div>
+      <div class="stat m" id="statEmber"><span class="lb">余烬</span><span class="vl" id="sEmber">0</span></div>
+    </div>
+    <div class="topbtns">
+      <button class="tbtn" id="btnUndo">↶ 撤回</button>
+      <button class="tbtn" id="btnRules2">？规则</button>
+      <button class="tbtn" id="btnCoach">🎓 引导</button>
+      <button class="tbtn" id="btnFull">⛶ 全屏</button>
+      <button class="tbtn go" id="btnEndTurn">结束回合 ▶</button>
+    </div>
+  </header>
+
+  <div class="weatherbar" id="weatherbar"></div>
+  <div class="statusbar" id="statusbar">
+    <span class="dot"></span>
+    <span class="grow" id="statusText">雨落在钟楼上。</span>
+    <span class="acts" id="statusActions"></span>
+  </div>
+  <div class="lanes" id="lanes"></div>
+
+  <div class="shieldwrap">
+    <span class="lb">护盾</span>
+    <div class="shieldbar" id="shieldBar"></div>
+    <span class="guard off" id="guardTag">本回合撞盾 −0</span>
+    <div class="piles">
+      <div class="pile" title="牌库"><b id="pDeck">9</b><span>牌库</span></div>
+      <div class="pile" title="弃牌堆"><b id="pDiscard">0</b><span>弃牌</span></div>
+    </div>
+  </div>
+
+  <footer class="handbar">
+    <div class="ht">
+      <span>拖动卡牌到线上部署 · 或点一下选中再点线 · 点门番再点敌人进攻</span>
+      <span class="resting" id="restingInfo"></span>
+      <span class="legend">手牌上限 5 · 门番上场 1 回响 · 法术按卡面</span>
+    </div>
+    <div class="hand" id="hand"></div>
+  </footer>
+</section>
+
+<section class="screen" id="scr-table">
+  <div class="twrap">
+    <div class="tbar no-print">
+      <button class="btn primary" id="btnPDF">📄 生成 PDF</button>
+      <button class="btn" id="btnPrint">🖨 用浏览器打印</button>
+      <button class="btn" id="btnTableBack">← 返回</button>
+    </div>
+    <h2>线下实体版 · 完整说明书</h2>
+
+    <h3>需要的材料（完全脱离电子设备）</h3>
+    <div class="kit">
+      <div><b>9 张卡</b>当牌库：4 名门番 + 5 张法术（下方可打印）</div>
+      <div><b>7 颗六面骰 + 1 颗十二面骰</b>（没有其他道具）</div>
+      <div><b>1 张波次表</b>（下方可打印，每回合对照）</div>
+      <div><b>12 枚纸质敌人 token</b>：徘徊者 ×4、猎犬 ×3、低语者 ×3、夜之领主 ×2（下方可打印）</div>
+      <div><b>6 张场景纸条</b>（下方可打印，每局洗牌抽 3 张）</div>
+    </div>
+
+    <h3>一、骰子分配（固定）</h3>
+    <table>
+      <tr><th>骰子</th><th>用途</th></tr>
+      <tr><td>d6 #1</td><td>回响（每回合重置为 5，上限 6）</td></tr>
+      <tr><td>d6 #2</td><td>余烬（0–6）</td></tr>
+      <tr><td>d6 #3–#5</td><td>门番耐久（最多 3 个门番同时在场）</td></tr>
+      <tr><td>d6 #6–#7</td><td>夜之领主耐久（最多 2 只同时在场）</td></tr>
+      <tr><td>d12</td><td>护盾（上限 12）</td></tr>
+    </table>
+    <div class="why">徘徊者、猎犬、低语者<b>不需要骰子</b>。它们用纸质 token 的位置和正反面表示状态。</div>
+
+    <h3>二、单位表示</h3>
+    <div class="why">
+      <b>门番：</b>耐久用 d6 追踪；强化状态用<b>卡牌方向</b>表示——<br>
+      正放（不转）= 无强化　·　顺时针 90° = 已淬火（攻击 +1）<br>
+      逆时针 90° = 已加固（耐久上限 +1）　·　倒放 180° = 两者都有<br><br>
+      <b>徘徊者（血 1）：</b>正面朝上放在线的<b>左端</b>。<br>
+      <b>猎犬（血 2）：</b>正面朝上放线的<b>中间</b>；受伤后倒转 180° 表示已受伤，再受伤移除。<br>
+      <b>低语者（血 1）：</b><b>背面朝上</b>放线的<b>最远端</b>表示隐身；下雨或德尔塔出场时翻到正面。<br>
+      <b>夜之领主（血 4）：</b>拿一颗 d6 放在 token 旁边，转到 4。
+    </div>
+
+    <h3>三、敌人放置规则</h3>
+    <ul>
+      <li>优先放<b>没有门番</b>的线。</li>
+      <li>三条线都有门番：放<b>敌人最多</b>的线（会挤在一起）。</li>
+      <li>并列：按<b>左 → 中 → 右</b>的顺序。</li>
+      <li>每条线最多 2 只敌人（巷子场景 1 只），放不下就跳过。</li>
+    </ul>
+
+    <h3>四、波次表（每回合对照，无需手机）</h3>
+    <table>
+      <tr><th>回合</th><th>敌人</th><th>回合</th><th>敌人</th></tr>
+      <tr><td><b>1</b></td><td>徘徊者</td><td><b>9</b></td><td>猎犬 ×2 + 徘徊者</td></tr>
+      <tr><td><b>2</b></td><td>徘徊者 ×2</td><td><b>10</b></td><td>徘徊者 ×2 + 猎犬</td></tr>
+      <tr><td><b>3</b></td><td>徘徊者 ×2</td><td><b>11</b></td><td>低语者 + 猎犬</td></tr>
+      <tr><td><b>4</b></td><td>低语者</td><td><b>12</b></td><td>徘徊者 + 夜之领主</td></tr>
+      <tr><td><b>5</b></td><td>猎犬 + 徘徊者</td><td><b>13</b></td><td>猎犬 ×2 + 徘徊者</td></tr>
+      <tr><td><b>6</b></td><td>徘徊者 + 低语者</td><td><b>14</b></td><td>低语者 + 猎犬 ×2</td></tr>
+      <tr><td><b>7</b></td><td>猎犬 + 徘徊者</td><td><b>15</b></td><td>夜之领主 + 猎犬</td></tr>
+      <tr><td><b>8</b></td><td>低语者 ×2</td><td></td><td></td></tr>
+    </table>
+
+    <h3>五、特殊行动（第 4/8/12 回合，用 d6 判定）</h3>
+    <div class="why">
+      掷 1 颗 d6：<br>
+      <b>1–2 = 浓雾</b>：本回合我方门番攻击 −1（最低 1）。<br>
+      <b>3–4 = 犬吠</b>：本回合所有幽灵攻击 +1。<br>
+      <b>5–6 = 增援</b>：两条线各加 1 只徘徊者（优先放没门番的线）。<br><br>
+      <b>伽马在场时：</b>本回合不掷骰，把这次特殊行动推迟到下一回合。只延后一次，不会永久阻止。
+    </div>
+
+    <h3>六、开局设置</h3>
+    <ol>
+      <li>9 张牌洗混当牌库，面朝下放在桌上。</li>
+      <li>6 张场景卡随机抽 3 张，分别贴在左线、中线、右线。</li>
+      <li>d12 转到护盾初始值（<b>新手 12 / 通常 10</b>）。</li>
+      <li>回响 d6 转到 5，余烬 d6 转到 0。</li>
+      <li>波次表放在手边，第 1 回合开始。</li>
+      <li><b>第 1 回合开始前场上没有任何敌人</b>，敌人是在第 1 回合的敌方阶段登场的。</li>
+    </ol>
+
+    <h3>七、一个回合的完整流程</h3>
+    <ol>
+      <li><b>我方阶段</b>：回响骰转到 5。花回响做以下操作（顺序随意）：
+        <ul>
+          <li>上场门番（1 回响）</li>
+          <li>指挥进攻（1 回响）</li>
+          <li>换防（1 回响）</li>
+          <li>撤退（1 回响）</li>
+          <li>使用法术（按卡面费用，用完进弃牌堆）</li>
+          <li>强化（3 余烬，每人每种各一次）</li>
+        </ul>
+      </li>
+      <li><b>抽牌定天气</b>：从牌库顶端翻 2 张牌进手牌（手牌上限 5 张）。<br>
+        · 2 张门番 → 大雨（低语者翻正面，夜之领主雾甲失效）<br>
+        · 1 门番 + 1 法术 → 小雨（无事发生）<br>
+        · 2 张法术 → 掷 1 颗 d6：1–3 浓雾 / 4–6 晴天<br>
+        手牌已经满 5 张则不翻牌，天气保持上一回合。
+      </li>
+      <li><b>敌方阶段</b>：
+        <ul>
+          <li><b>3a 特殊行动</b>：第 4/8/12 回合，按 d6 结果执行（伽马在场则推迟）。</li>
+          <li><b>3b 敌人登场</b>：看波次表，按放置规则把对应敌人放到线上。</li>
+          <li><b>3c 幽灵攻击</b>：从左到右每条线，每只幽灵依次攻击。
+            <ul>
+              <li>线<b>有门番</b> → 打门番，耐久骰转小对应点数。</li>
+              <li>线<b>没门番</b> → 撞护盾，d12 转小对应点数。</li>
+            </ul>
+            伤害修正顺序（最低 1 点）：<br>
+            ① 幽灵基础攻击（徘徊者 1、猎犬 2、低语者 1、夜之领主 3）<br>
+            ② 钟楼废墟场景：−1<br>
+            ③ 犬吠特殊行动：+1<br>
+            ④ 猎犬撞盾：+1<br>
+            ⑤ 市区场景：护盾受伤 −1<br>
+            ⑥ 圣域隔离区法术：撞盾 −1
+          </li>
+        </ul>
+      </li>
+      <li><b>回合结束</b>：回合 +1。第 5、10 回合结束全场门番耐久骰转大 1。护盾归零 → 输；撑过 15 回合 → 赢。</li>
+    </ol>
+
+    <h3>八、双人对战模式</h3>
+    <div class="why">一个人当守方、一个人当攻方。守方使用 4 门番 + 5 法术；攻方使用纸质 token 当幽灵。</div>
+    <h4>守方</h4>
+    <ul>
+      <li>护盾 12（通常难度 10），每回合 5 回响，手牌上限 5。</li>
+      <li>行动流程和单人一样（我方阶段 → 抽牌定天气 → 敌方阶段由攻方操作）。</li>
+      <li>目标：撑过 15 回合。</li>
+    </ul>
+    <h4>攻方</h4>
+    <ul>
+      <li>每回合获得幽灵点数：第 1–5 回合 3 点、第 6–10 回合 4 点、第 11–15 回合 5 点，可累积至 10 点。</li>
+      <li>花点数部署幽灵：徘徊者 1 点、低语者 2 点、猎犬 2 点、夜之领主 4 点。每条线最多 2 只（巷子 1 只）。</li>
+      <li>每回合可免费使用一次特殊行动（第 4/8/12 回合，伽马在场则推迟）。</li>
+      <li>目标：15 回合内打光守方护盾。</li>
+    </ul>
+    <h4>回合顺序</h4>
+    <ol>
+      <li>守方行动（同单人第一步）。</li>
+      <li>守方抽牌定天气（同单人第二步）。</li>
+      <li>攻方阶段：花点数部署幽灵，使用特殊行动。</li>
+      <li>幽灵攻击（同单人 3c）。</li>
+      <li>回合 +1，交换攻守继续。</li>
+    </ol>
+
+    <h3>九、牌库管理</h3>
+    <ul>
+      <li>每回合最多翻 2 张进手牌。</li>
+      <li>法术用完后进弃牌堆，门番卡不进弃牌堆。</li>
+      <li>旧日残响用完后移出本局，既不回牌库也不进弃牌堆。</li>
+      <li>牌库空了：把弃牌堆洗混当新牌库，然后继续翻。</li>
+      <li>牌库和弃牌堆都空：不翻牌，天气保持上一回合，本回合照常进行。</li>
+      <li>手牌上限 5 张：满了就不再翻牌，不会出现“抽了没地方放”的情况。</li>
+    </ul>
+
+    <h3>十、门番（4 名）</h3>
+    <table id="unitTable"></table>
+
+    <h3>十一、法术（5 张）</h3>
+    <table id="spellTable"></table>
+
+    <h3>十二、敌人</h3>
+    <table>
+      <tr><th>名字</th><th>耐久</th><th>攻击</th><th>余烬</th><th>说明</th></tr>
+      <tr><td><b>徘徊者</b></td><td>1</td><td>1</td><td>1</td><td>最常见的幽灵</td></tr>
+      <tr><td><b>猎犬</b></td><td>2</td><td>2</td><td>2</td><td>那条线没有门番时，撞盾伤害 +1</td></tr>
+      <tr><td><b>低语者</b></td><td>1</td><td>1</td><td>1</td><td>隐身：看不见就打不到，得先让它显形</td></tr>
+      <tr><td><b>夜之领主</b></td><td>4</td><td>3</td><td>3</td><td>雾甲：不在大雨天时，受到的伤害 −1</td></tr>
+    </table>
+
+    <h3>十三、场景（每局洗牌抽 3 张）</h3>
+    <table id="sceneTable"></table>
+    <div class="why">
+      <b>场景效果归属：</b><br>
+      · <b>街区</b>（门番攻击 +1）：只对门番生效，对敌人不生效。<br>
+      · <b>钟楼废墟</b>（敌人攻击 −1）：只对敌人生效，对门番不生效。<br>
+      · <b>教堂</b>（回血）：只对门番生效。<br>
+      · <b>市区</b>（受伤 −1）：对所有来源的伤害生效（门番和护盾都算）。<br>
+      · <b>郊区</b>（耐久上限 +1）：只对门番生效。<br>
+      · <b>巷子</b>（最多 1 只敌人）：只限制幽灵。
+    </div>
+
+    <h3>十四、收益、回血、强化</h3>
+    <ul>
+      <li><b>余烬</b>（上限 6）：击退徘徊者/低语者得 1，猎犬得 2，夜之领主得 3；贝塔每击退一只额外 +1。</li>
+      <li><b>强化</b>：每名门番的「淬火」（攻击 +1）和「加固」（耐久上限 +1 并回满）各能做一次，每次 3 枚余烬。<b>强化跟着角色本人保留</b>，撤退或退场再上场都不会丢。</li>
+      <li><b>回血</b>：站在“教堂”线上的门番每回合回 1 点；每个夜晚结束时全场再回 1 点。</li>
+    </ul>
+
+    <h3>打印卡牌</h3>
+    <div class="print-grid" id="printCards"></div>
+    <h3>打印场景纸条</h3>
+    <div class="print-grid" id="printScenes"></div>
+    <h3>打印敌人 token</h3>
+    <div class="tokrow" id="tokens"></div>
+  </div>
+</section>
+
+</div>
+
+<div id="toasts"></div>
+<div id="fxLayer"></div>
+<div class="banner" id="banner"><span id="bannerText"></span></div>
+<div id="dlg"><div class="box">
+  <div class="av" id="dlgAv"></div>
+  <div style="position:relative;flex:1">
+    <div class="nm" id="dlgName"></div>
+    <div class="tx" id="dlgText"></div>
+    <div class="nx">点一下继续 ▶</div>
+  </div>
+</div></div>
+<div class="panel" id="unitPanel"><div class="boxx" id="unitPanelBody"></div></div>
+<div class="modal" id="modal"><div class="sheet" id="modalSheet"></div></div>
+<div id="coach"><div id="spot"></div><div id="coachBubble"></div></div>
+<div id="pdfBox"><div class="bx">
+  <h3>📄 打印材料已生成</h3>
+  <p id="pdfTip">正在生成…</p>
+  <div class="row">
+    <button class="go" id="pdfSave">下载 PDF</button>
+    <button id="pdfOpen">在新标签打开</button>
+    <button id="pdfClose">关闭</button>
+  </div>
+</div></div>
+<div id="result"><div class="rbox">
+  <div class="rt" id="resTitle">—</div>
+  <div class="rp" id="resText">—</div>
+  <div class="rstat">
+    <div><b id="resRound">0</b>坚持回合</div>
+    <div><b id="resShield">0</b>剩余护盾</div>
+    <div><b id="resKill">0</b>击退幽灵</div>
+  </div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="btn primary" id="btnAgain">再来一夜</button>
+    <button class="btn" id="btnToTitle">回到标题</button>
+  </div>
+</div></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+const ROUNDS_TOTAL=15, EMBER_CAP=6;
+const IS_TOUCH=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+const GAMMA_MODE='line';
+function gammaTargets(li){
+  const l=S.lanes[li]; if(!l||!l.unit||l.unit.id!=='gamma') return [];
+  const out=[];
+  const ok=f=>!(FOES[f.id].stealth&&!f.revealed);
+  if(GAMMA_MODE==='all'){
+    S.lanes.forEach((ln,i)=>ln.foes.forEach((f,fi)=>{ if(ok(f)) out.push({lane:i,idx:fi,foe:f}); }));
+  }else if(GAMMA_MODE==='adjacent'){
+    [li-1,li,li+1].forEach(i=>{
+      if(i<0||i>2) return;
+      S.lanes[i].foes.forEach((f,fi)=>{ if(ok(f)) out.push({lane:i,idx:fi,foe:f}); });
+    });
+  }else{
+    l.foes.forEach((f,fi)=>{ if(ok(f)) out.push({lane:li,idx:fi,foe:f}); });
+  }
+  return out;
+}
+
+/* ============ 难度（整体上调） ============ */
+const MODES={
+  novice:{name:'新手', shield:12, echo:5, upCost:3, enemyHp:-1, specialEvery:4, sealBonus:4, handMax:5, night3Atk:0,
+    desc:'护盾 12 · 每回合 5 回响 · 幽灵耐久 −1 · 手牌上限 5 · 特殊行动每 4 回合一次 · 强化 3 余烬'},
+  normal:{name:'通常', shield:10, echo:5, upCost:3, enemyHp:0, specialEvery:4, sealBonus:3, handMax:5, night3Atk:1,
+    desc:'护盾 10 · 每回合 5 回响 · 幽灵耐久原样 · 手牌上限 5 · 特殊行动每 4 回合一次 · 第三夜幽灵攻击 +1'}
+};
+let difficulty=(MODES[localStorage.getItem('se_diff')]===undefined)?'normal':localStorage.getItem('se_diff');
+if(!MODES[difficulty]) difficulty='normal';
+const mode=()=>MODES[difficulty];
+
+const SCENES=[
+  {id:'church', name:'教堂',   icon:'⛪', tip:'本线门番每回合回复 1 耐久'},
+  {id:'street', name:'街区',   icon:'🏙', tip:'本线门番攻击 +1（对敌人无效）'},
+  {id:'city',   name:'市区',   icon:'🏢', tip:'本线受到的伤害 −1'},
+  {id:'suburb', name:'郊区',   icon:'🏡', tip:'本线门番上场时耐久上限 +1'},
+  {id:'alley',  name:'巷子',   icon:'🌃', tip:'本线最多只能有 1 只敌人'},
+  {id:'tower',  name:'钟楼废墟', icon:'🗼', tip:'本线的敌人攻击 −1'}
+];
+const sceneById=id=>SCENES.find(s=>s.id===id);
+
+const WEATHER={
+  rain:   {name:'大雨', icon:'🌧', desc:'所有隐身的幽灵立刻显形；夜之领主的雾甲失效'},
+  drizzle:{name:'小雨', icon:'🌦', desc:'没有额外影响'},
+  fog:    {name:'浓雾', icon:'🌫', desc:'双方攻击 −1（最低 1）；夜之领主的雾甲生效'},
+  clear:  {name:'晴天', icon:'☀️', desc:'没有额外影响'}
+};
+
+const UNITS={
+  alpha:{name:'阿尔法',glyph:'α',sex:'f',hp:3,atk:2,hits:1,title:'收容',
+    brief:'出手 1 次·2 伤；对夜之领主 +1',
+    desc:'收容者。每回合出手 1 次，造成 2 点伤害；对夜之领主伤害 +1。'},
+  beta: {name:'贝塔',glyph:'β',sex:'f',hp:2,atk:1,hits:2,title:'收割',
+    brief:'出手 2 次各 1 伤；击退额外 +1 余烬',
+    desc:'收割者。每回合出手 2 次，每次 1 点，可以打不同的敌人；每击退一只幽灵额外 +1 余烬。'},
+  gamma:{name:'伽马',glyph:'γ',sex:'f',hp:3,atk:1,hits:1,sweep:true,title:'首领·谈判',
+    brief:'横扫当前线；敌方特殊行动延后一次',
+    desc:'横扫：她所在的线上所有敌人各受 1 点伤害（每回合 1 次）。她在场时，敌方的特殊行动被延后一回合（只延后一次，不会永久阻止）。'},
+  delta:{name:'德尔塔',glyph:'δ',sex:'f',hp:2,atk:1,hits:1,pierce:true,title:'唤雨',
+    brief:'出场即破隐；可花 1 回响造雨',
+    desc:'唤雨者。出场时所有隐身敌人立刻显形；出手时对目标造成 1 点伤害；还可花 1 回响把天气改成大雨。'}
+};
+const UNIT_IDS=Object.keys(UNITS);
+
+const SPELLS=[
+  {id:'rain', name:'旧时之雨', glyph:'☔', cost:2, brief:'破隐，全体敌人各受 1 伤',
+    desc:'雨幕落下：所有隐身的敌人立刻显形，并各受到 1 点伤害。'},
+  {id:'seal', name:'圣域隔离区', glyph:'✚', cost:2, brief:'护盾 +3；本回合撞盾 −1',
+    desc:'护盾 +3（新手 +4、通常 +3），不超过上限；本回合幽灵撞盾的伤害 −1。'},
+  {id:'echo', name:'旧日残响', glyph:'♪', cost:1, brief:'回响 +3；用后移出本局',
+    desc:'回响 +3。这张卡用完就移出本局（一场只能用一次），不会回到牌库。'},
+  {id:'heal', name:'钟声回响', glyph:'🕯', cost:3, brief:'在场门番各回复 2 耐久',
+    desc:'钟声响起：所有在场门番回复 2 点耐久。'},
+  {id:'ward', name:'铁壁之咒', glyph:'🛡', cost:2, brief:'本回合敌人攻击 −2',
+    desc:'铁壁立起：本回合所有敌人的攻击 −2（最低 1）。'}
+];
+const spellById=id=>SPELLS.find(s=>s.id===id);
+
+const FOES={
+  wanderer:{name:'徘徊者',hp:1,atk:1,ember:1},
+  hound:   {name:'猎犬',  hp:2,atk:2,ember:2,breach:true},
+  lurker:  {name:'低语者',hp:1,atk:1,ember:1,stealth:true},
+  lord:    {name:'夜之领主',hp:4,atk:3,ember:3,boss:true,veil:true}
+};
+
+const WAVES=[
+  ['wanderer'],['wanderer','wanderer'],['wanderer','wanderer'],['lurker'],['hound','wanderer'],
+  ['wanderer','lurker'],['hound','wanderer'],['lurker','lurker'],['hound','hound','wanderer'],
+  ['wanderer','wanderer','hound'],['lurker','hound'],['wanderer','lord'],
+  ['hound','hound','wanderer'],['lurker','hound','hound'],['lord','hound']
+];
+const NOVICE_WAVES=[
+  ['wanderer'],['wanderer'],['wanderer'],['lurker'],['hound'],
+  ['wanderer'],['lurker'],['hound'],['hound'],['wanderer'],
+  ['lurker'],['lord'],['hound'],['lurker'],['lord']
+];
+const waveOf=r=>(difficulty==='novice'?NOVICE_WAVES:WAVES)[r-1]||[];
+
+const AI_MOVES=[
+  {id:'fog',    name:'浓雾', desc:'本回合我方门番的攻击 −1（最低 1）'},
+  {id:'howl',   name:'犬吠', desc:'本回合幽灵的攻击 +1'},
+  {id:'recruit',name:'增援', desc:'立刻在两条线上各加入 1 只徘徊者'}
+];
+
+const FIG={
+  alpha:{hair:'#1d1b28',dress:'#232634',accent:'#ef7286',wing:'#cfc7e8',weapon:'scythe',ears:false},
+  beta: {hair:'#ececf5',dress:'#232634',accent:'#6fa8e0',wing:'#ffffff',weapon:'scythe',ears:false},
+  gamma:{hair:'#3a2b4d',dress:'#2b2340',accent:'#b98ee6',wing:'#c9b6e8',weapon:'staff', ears:true},
+  delta:{hair:'#e58fae',dress:'#2c3b5e',accent:'#ef7286',wing:null,     weapon:'umbrella',ears:false}
+};
+function figureSVG(id,size){
+  const f=FIG[id]; if(!f) return '';
+  const M={
+    scythe:'<path d="M47 6 L50 70" stroke="#8b93aa" stroke-width="2.4" stroke-linecap="round"/>'+
+           '<path d="M47 7 C58 8 62 16 59 22" stroke="#5b5f74" stroke-width="3.4" fill="none" stroke-linecap="round"/>',
+    staff:'<path d="M48 8 L48 70" stroke="#8a7ab0" stroke-width="2.2" stroke-linecap="round"/>'+
+          '<path d="M44 10 h8 M48 6 v8" stroke="#b98ee6" stroke-width="2.2"/>',
+    umbrella:'<path d="M48 8 L48 70" stroke="#6a7290" stroke-width="2.2" stroke-linecap="round"/>'+
+             '<path d="M30 17 a18 13 0 0 1 36 0 z" fill="#3b4a6b"/>'
+  };
+  const wings=f.wing?`<path d="M24 30 C9 19 1 32 6 45 C6 34 15 29 24 34 Z" fill="${f.wing}" opacity=".95"/>
+      <path d="M40 30 C55 19 63 32 58 45 C58 34 49 29 40 34 Z" fill="${f.wing}" opacity=".95"/>`:'';
+  return `<svg viewBox="0 0 64 76" width="${size||54}">
+    ${wings}
+    <path d="M32 30 c-9 0 -13.5 8 -15 20 L15 66 h34 l-2 -16 c-1.5 -12 -6 -20 -15 -20 z" fill="${f.dress}"/>
+    <path d="M23 44 h18 v16 h-18 z" fill="#eef2fb" opacity=".85"/>
+    <path d="M32 30 c-6 0 -10 3 -12 8 h24 c-2 -5 -6 -8 -12 -8z" fill="#eef2fb" opacity=".7"/>
+    <circle cx="32" cy="21" r="10.5" fill="#f7dcc7"/>
+    <path d="M21.5 20 c0 -9 21 -9 21 0 c0 -4 -4.5 -13 -10.5 -13 c-6 0 -10.5 9 -10.5 13 z" fill="${f.hair}"/>
+    ${f.ears?'<path d="M22 12 l-4 -9 l9 5 z M42 12 l4 -9 l-9 5 z" fill="'+f.hair+'"/>':''}
+    <ellipse cx="28" cy="22" rx="1.7" ry="2.2" fill="${f.accent}"/>
+    <ellipse cx="36" cy="22" rx="1.7" ry="2.2" fill="${f.accent}"/>
+    ${M[f.weapon]||''}</svg>`;
+}
+
+/* ============ 敌人立绘 ============ */
+function foeSVG(id){
+  const wrap=inner=>`<svg viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet">${inner}</svg>`;
+  if(id==='hound'){
+    return wrap(`
+      <ellipse cx="32" cy="57" rx="15" ry="3.6" fill="rgba(0,0,0,.45)"/>
+      <path d="M15 35 C9 24 13 11 23 9 L25 1 L31 11 C31.8 10.8 32.2 10.8 33 11 L39 1 L41 9 C51 11 55 24 49 35 C45 45 38 53 32 53 C26 53 19 45 15 35 Z" fill="#d95563"/>
+      <path d="M21 21 L25 11 L29 20 Z" fill="#8f2029"/>
+      <path d="M43 21 L39 11 L35 20 Z" fill="#8f2029"/>
+      <path d="M23 24 C17 26 15 32 17 37 C22 34 26 30 27 25 Z" fill="#a8232f" opacity=".7"/>
+      <path d="M41 24 C47 26 49 32 47 37 C42 34 38 30 37 25 Z" fill="#a8232f" opacity=".7"/>
+      <circle cx="25" cy="30" r="4.2" fill="#1c0408"/>
+      <circle cx="39" cy="30" r="4.2" fill="#1c0408"/>
+      <circle cx="25.5" cy="30" r="1.9" fill="#ffd36e"/>
+      <circle cx="39.5" cy="30" r="1.9" fill="#ffd36e"/>
+      <path d="M22 39 q10 12 20 0z" fill="#3d0a11"/>
+      <path d="M25 40 l1.6 4.4 2.2-4.2 M31 41 l1.6 4.4 2.2-4.2 M37 40 l1.6 4.4 2.2-4.2" stroke="#ffe9c9" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+    `);
+  }
+  if(id==='lurker'){
+    return wrap(`
+      <ellipse cx="32" cy="57" rx="12" ry="3.2" fill="rgba(0,0,0,.45)"/>
+      <path d="M32 8c-9.5 0-16 7.5-16 17 0 6.5-4.5 10-5.5 15.5-1 6 3.5 9.5 7.5 7.5 2-1 4 .5 5 2.5 2 3.5 6 3.5 8 0 1-2 3-3.5 5-2.5 4 2 8.5-1.5 7.5-7.5C43 35 38.5 31.5 38.5 25c0-9.5-6.5-17-16.5-17z" fill="#7d89a8"/>
+      <path d="M32 8c-9.5 0-16 7.5-16 17v2c0-9.5 6.5-15 16-15s16 5.5 16 15v-2c0-9.5-6.5-17-16-17z" fill="#b7c3dc" opacity=".5"/>
+      <ellipse cx="32" cy="25" rx="8" ry="10" fill="#141a29"/>
+      <ellipse cx="32" cy="25" rx="3.2" ry="4.6" fill="#cddcf5"/>
+      <ellipse cx="32" cy="25" rx="1.3" ry="2" fill="#39415a"/>
+      <path d="M22 44 q10 7 20 0" stroke="#5d6a86" stroke-width="2" fill="none" opacity=".6" stroke-linecap="round"/>
+    `);
+  }
+  if(id==='lord'){
+    return wrap(`
+      <ellipse cx="32" cy="58" rx="18" ry="3.8" fill="rgba(0,0,0,.5)"/>
+      <path d="M17 22 C9 15 6 5 9 3 C16 8 21 15 23 20 Z" fill="#a8232f"/>
+      <path d="M47 22 C55 15 58 5 55 3 C48 8 43 15 41 20 Z" fill="#a8232f"/>
+      <path d="M13 36 C7 22 15 10 32 8 C49 10 57 22 51 36 C47 49 40 57 32 57 C24 57 17 49 13 36 Z" fill="#6d1620"/>
+      <path d="M19 21 L23 11 L27 19 L32 9 L37 19 L41 11 L45 21 Z" fill="#e6b95e"/>
+      <path d="M19 21 L45 21 L43 25 L21 25 Z" fill="#c99b3f"/>
+      <circle cx="25" cy="34" r="4.6" fill="#180307"/>
+      <circle cx="39" cy="34" r="4.6" fill="#180307"/>
+      <circle cx="25.2" cy="34" r="2" fill="#ff6a7d"/>
+      <circle cx="39.2" cy="34" r="2" fill="#ff6a7d"/>
+      <path d="M23 45 q9 8 18 0" stroke="#ff8a99" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M27 47 l1.8 4 1.8-4 1.8 4 1.8-4" stroke="#ffe0e6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    `);
+  }
+  /* wanderer 默认 */
+  return wrap(`
+    <ellipse cx="32" cy="57" rx="14" ry="3.4" fill="rgba(0,0,0,.45)"/>
+    <path d="M32 7c-10.5 0-17.5 8-17.5 19v17c0 4.4 3.2 6.4 6.4 4.2l4.6-3.2 6.5 5.4 6.5-5.4 4.6 3.2c3.2 2.2 6.4.2 6.4-4.2V26c0-11-7-19-17.5-19z" fill="#a893e0"/>
+    <path d="M32 7c-10.5 0-17.5 8-17.5 19v2.4C15.5 19 22 14 32 14s16.5 5 17.5 14.4V26c0-11-7-19-17.5-19z" fill="#d3c6ff" opacity=".85"/>
+    <ellipse cx="25" cy="27" rx="3.4" ry="4.6" fill="#241a3d"/>
+    <ellipse cx="39" cy="27" rx="3.4" ry="4.6" fill="#241a3d"/>
+    <ellipse cx="25.4" cy="28" rx="1.4" ry="2.1" fill="#cdb9ff"/>
+    <ellipse cx="39.4" cy="28" rx="1.4" ry="2.1" fill="#cdb9ff"/>
+    <path d="M26 40 q6 5 12 0" stroke="#3b2d5e" stroke-width="2" fill="none" opacity=".6" stroke-linecap="round"/>
+  `);
+}
+
+const LINES={
+  start:[
+    {w:'alpha',t:'雨还在下。都站好自己的位置。',cond:()=>S.weather==='rain'||S.weather==='drizzle'},
+    {w:'alpha',t:'都站好自己的位置。',cond:()=>S.weather==='fog'||S.weather==='clear'},
+    {w:'beta',t:'它们从三条线上过来了。'},
+    {w:'gamma',t:'别慌，一条一条清。'},
+    {w:'delta',t:'要是下雨，我就能看见它们。',cond:()=>S.weather!=='rain'&&S.lanes.some(ln=>ln.foes.some(f=>FOES[f.id].stealth&&!f.revealed))},
+    {w:'delta',t:'雾里什么都看不清。',cond:()=>S.weather==='fog'},
+    {w:'delta',t:'今天倒是放晴了。',cond:()=>S.weather==='clear'},
+    {w:'beta',t:'天气不错。',cond:()=>S.weather==='clear'},
+    {w:'alpha',t:'雨停了，但别放松。',cond:()=>S.weather==='clear'}
+  ],
+  attack:[
+    {w:'alpha',t:'让开。'},
+    {w:'beta',t:'一次两个。'},
+    {w:'gamma',t:'整条街都是我的。'},
+    {w:'delta',t:'雨要落下来了。',cond:()=>S.weather!=='rain'}
+  ],
+  hurt:[
+    {w:'alpha',t:'啧——被咬到了。'},
+    {w:'beta',t:'撑住！'},
+    {w:'gamma',t:'……别硬顶。'},
+    {w:'delta',t:'小心它的爪子。'}
+  ],
+  down:[
+    {w:'alpha',t:'我先退下去！'},
+    {w:'beta',t:'换人挡一下！'},
+    {w:'gamma',t:'这条街交给你们。'},
+    {w:'delta',t:'对不起。'}
+  ],
+  retire:[
+    {w:'alpha',t:'我先撤回后面。'},
+    {w:'beta',t:'这里交给你们。'},
+    {w:'gamma',t:'换个人上来。'},
+    {w:'delta',t:'我退一步。'}
+  ],
+  stealth:[
+    {w:'delta',t:'有东西在隐身，我感觉得到。'},
+    {w:'beta',t:'看不见就打不到，先让它现身。'},
+    {w:'gamma',t:'德尔塔，该下雨了。',cond:()=>hasUnit('delta')},
+    {w:'alpha',t:'先别管它，挡住眼前的。'}
+  ],
+  lowshield:[
+    {w:'alpha',t:'护盾快撑不住了！'},
+    {w:'beta',t:'再漏两次就完了。'},
+    {w:'gamma',t:'别管后排，先挡这一波！'},
+    {w:'delta',t:'我把雨压下来。',cond:()=>S.weather!=='clear'}
+  ],
+  enemy:[
+    {w:'alpha',t:'它们动了。'},
+    {w:'beta',t:'盯紧中间。'},
+    {w:'gamma',t:'别让它们越过线。'},
+    {w:'delta',t:'雾里什么都看不清。',cond:()=>S.weather==='fog'},
+    {w:'delta',t:'它们来了。',cond:()=>S.weather!=='fog'}
+  ],
+  heal:[
+    {w:'alpha',t:'教堂的光。'},
+    {w:'beta',t:'能再撑一下。'},
+    {w:'delta',t:'……喘过来了。'}
+  ],
+  ember:[
+    {w:'alpha',t:'淬火。'},
+    {w:'beta',t:'攒够了。'},
+    {w:'gamma',t:'把甲再敲实一点。'}
+  ],
+  spell:[
+    {w:'delta',t:'雨落下来了。'},
+    {w:'gamma',t:'结界，起。'},
+    {w:'beta',t:'就现在。'},
+    {w:'alpha',t:'撑住这一波。'}
+  ],
+  talk:[
+    {w:'gamma',t:'先坐下来谈。'},
+    {w:'gamma',t:'今晚，晚一点打。'},
+    {w:'alpha',t:'她真的把它们拖住了。'}
+  ],
+  win:[
+    {w:'alpha',t:'天亮了。'},
+    {w:'beta',t:'我们守完了。'},
+    {w:'gamma',t:'只是今夜而已。'},
+    {w:'delta',t:'明天，还会下雨。'}
+  ],
+  lose:[
+    {w:'alpha',t:'护盾碎了——撤！'},
+    {w:'beta',t:'对不起，我没守住。'},
+    {w:'gamma',t:'……又是这个结局。'},
+    {w:'delta',t:'雨还在下。',cond:()=>S.weather!=='clear'},
+    {w:'delta',t:'天晴了，但我们输了。',cond:()=>S.weather==='clear'}
+  ]
+};
+
+let S=null, history=[], busy=false, sel=null, uidSeq=1, dealAnim=false;
+let seenFoe=new Set(), seenUnit=new Set();
+let watchdog=null;
+/* 天气显示状态：用独立变量记录「上一次真正渲染出来的天气」 */
+let lastWeather=null, lastNight=0;
+let drag=null, laneRects=[];
+const LANESIDX=[0,1,2];
+
+function newGame(){
+  const M=mode();
+  const scenes=shuffle(SCENES).slice(0,3).map(s=>s.id);
+  S={
+    round:1, night:1, echo:M.echo, shield:M.shield, shieldMax:M.shield, ember:0, kills:0,
+    deck:shuffle(SPELLS.map(s=>s.id).concat(UNIT_IDS)),
+    discard:[], hand:[],
+    lanes:[{unit:null,foes:[]},{unit:null,foes:[]},{unit:null,foes:[]}],
+    scenes,
+    weather:'drizzle',
+    over:false, foeAtkMod:0, unitAtkMod:0,
+    aiMove:null, aiPending:false, lowWarned:false, returning:[], benched:[],
+    shieldGuard:0,
+    mods:{}
+  };
+  uidSeq=1;
+  seenFoe=new Set(); seenUnit=new Set();
+  dealAnim=true;
+  lastWeather=null; lastNight=0;
+  drag=null;
+}
+
+const sceneOf=li=>S.scenes[li];
+const hasScene=(li,id)=>S.scenes[li]===id;
+const laneCap=li=>hasScene(li,'alley')?1:2;
+const isUnit=id=>!!UNITS[id];
+const hasUnit=id=>S.lanes.some(l=>l.unit&&l.unit.id===id);
+const modOf=id=>S.mods[id]||{atk:0,hp:0};
+
+function render(){
+  try{
+    $('#sNight').textContent=['一','二','三'][S.night-1];
+    $('#sRound').textContent=Math.min(S.round,ROUNDS_TOTAL);
+    $('#sRoundMax').textContent='/'+ROUNDS_TOTAL;
+    $('#sEcho').textContent=S.echo;
+    $('#sShield').textContent=Math.max(0,S.shield);
+    $('#sShieldMax').textContent='/'+S.shieldMax;
+    $('#statShield').classList.toggle('low',S.shield<=Math.ceil(S.shieldMax*0.3));
+    $('#sEmber').textContent=S.ember;
+    $('#statEmber').classList.toggle('ready',S.ember>=mode().upCost);
+    $('#pDeck').textContent=S.deck.length;
+    $('#pDiscard').textContent=S.discard.length;
+
+    const bar=$('#shieldBar');
+    if(bar.children.length!==S.shieldMax) bar.innerHTML=Array.from({length:S.shieldMax},()=>'<i class="sseg"></i>').join('');
+    [...bar.children].forEach((el,i)=>el.classList.toggle('on',i<S.shield));
+
+    const g=$('#guardTag');
+    if(g){
+      if(S.shieldGuard>0){ g.textContent='本回合撞盾 −'+S.shieldGuard; g.classList.remove('off'); }
+      else g.classList.add('off');
+    }
+
+    const rest=$('#restingInfo');
+    if(rest){
+      const parts=[];
+      if(S.returning.length) parts.push('退场休整：'+S.returning.map(r=>UNITS[r.id].name+'（第'+r.backAt+'回合回手）').join('、'));
+      if(S.benched.length) parts.push('本回合已撤退：'+S.benched.map(id=>UNITS[id].name).join('、')+'（下回合才能再上场）');
+      if(S.hand.length>=mode().handMax) parts.push('手牌已满（'+mode().handMax+' 张）：这回合不再翻牌、天气不变');
+      rest.innerHTML=parts.join('　·　');
+    }
+
+    renderWeather(); renderLanes(); renderHand(); renderStatus();
+    const ub=$('#btnUndo'); if(ub) ub.disabled=busy||!history.length;
+  }catch(e){ console.error('[render]',e); }
+}
+
+/* ============ 天气渲染（已修复：晴 → 大雨 时旧标签不会残留） ============ */
+function renderWeather(){
+  const bar=$('#weatherbar'); if(!bar) return;
+  const weatherKey=S.weather;
+  const w=WEATHER[weatherKey]||WEATHER.drizzle;
+
+  /* 只要 S.weather 和「上一次渲染出来的天气」不同，就认为发生了天气变化 */
+  const changed=(lastWeather!==null&&lastWeather!==weatherKey);
+  if(changed){ lastWeather=weatherKey; bar._flashUntil=Date.now()+1500; }
+  if(lastWeather===null) lastWeather=weatherKey;
+
+  const flashing=!!(bar._flashUntil&&Date.now()<bar._flashUntil);
+
+  const scn=S.scenes.map((id,li)=>{
+    const s=sceneById(id);
+    return `<i>${s.icon}${['左','中','右'][li]}·${s.name}</i>`;
+  }).join('　');
+
+  const ai=S.aiMove?`<span class="ai">敌方特殊行动：${S.aiMove.name}</span>`:'';
+  const handFull=(S.hand.length>=mode().handMax);
+  const hint=(handFull&&!changed)?'　<b class="hint">（手牌满，天气不变）</b>':'';
+
+  bar.className='weatherbar'+(flashing?' changed':'');
+  /* 每次都完整重建天气栏，标签永远与 S.weather 一致 */
+  bar.innerHTML=
+    `<span class="wtag ${weatherKey}">${w.icon} ${w.name}</span>`+
+    `<span class="wd">${w.desc}${hint}</span>`+
+    `<span class="wsep"></span>`+
+    `<span class="scn">${scn}</span>${ai}`;
+
+  clearTimeout(bar._t);
+  if(flashing){
+    bar._t=setTimeout(()=>{
+      bar.classList.remove('changed');
+      bar._flashUntil=0;
+    },Math.max(60,bar._flashUntil-Date.now()));
+  }
+}
+
+function renderLanes(){
+  const wrap=$('#lanes'); wrap.innerHTML='';
+  LANESIDX.forEach(li=>{
+    const lane=S.lanes[li];
+    const sc=sceneById(sceneOf(li));
+    const el=document.createElement('div');
+    el.className='lane'; el.dataset.lane=li;
+    if(sel&&sel.type==='hand'&&S.hand[sel.idx]&&isUnit(S.hand[sel.idx])&&!lane.unit) el.classList.add('candeploy');
+    if(sel&&sel.type==='unit'&&sel.lane!==li&&!lane.unit) el.classList.add('canmove');
+    if(drag&&drag.moved&&isUnit(S.hand[drag.idx])&&!lane.unit) el.classList.add('candeploy');
+
+    const targets=(sel&&sel.type==='unit')?validTargets(sel.lane):[];
+
+    const ghosts=lane.foes.map((f,fi)=>{
+      const base=FOES[f.id];
+      const hidden=(base.stealth&&!f.revealed);
+      const cls=['foe'];
+      if(hidden) cls.push('stealth');
+      if(f.id==='hound') cls.push('hound');
+      if(base.boss) cls.push('lord');
+      if(!seenFoe.has(f.uid)){ cls.push('spawn'); seenFoe.add(f.uid); }
+      if(targets.some(t=>t.lane===li&&t.idx===fi)) cls.push('target');
+      let tag='';
+      if(hidden) tag='隐身';
+      else if(base.veil) tag=(S.weather==='rain'?'雾甲已破':'雾甲：非大雨伤害 −1');
+      else if(base.breach&&!lane.unit) tag='撞盾 +1';
+      return `<div class="${cls.join(' ')}" data-lane="${li}" data-foe="${fi}">
+        <div class="ficon">${foeSVG(f.id)}</div>
+        <div class="fname">${base.name}${hidden?'（隐身）':''}</div>
+        <div class="fstat"><span>攻 <b>${Math.max(1,base.atk+foeAtkModHere(li))}</b></span><span>耐 ${hidden?'?':f.hp}</span></div>
+        ${tag?`<div class="ftag">${tag}</div>`:''}
+        <div class="hpd">${Array.from({length:f.maxhp},(_,i)=>`<i class="${i<f.hp?'':'off'}"></i>`).join('')}</div>
+      </div>`;
+    }).join('') || '<span style="font-size:10.5px;color:var(--ink-faint)">这条线暂时没有敌人</span>';
+
+    const u=lane.unit;
+    let slot;
+    if(u){
+      const d=UNITS[u.id];
+      const spent=(u.hitsLeft<=0);
+      const uk=li+'-'+u.id;
+      const cls=['unit'];
+      if(spent) cls.push('spent');
+      if(sel&&sel.type==='unit'&&sel.lane===li) cls.push('sel');
+      if(!seenUnit.has(uk)){ cls.push('spawn'); seenUnit.add(uk); }
+      const buffs=[];
+      if(u.atkUp) buffs.push('淬火');
+      if(u.hpUp) buffs.push('加固');
+      const debuff=(S.unitAtkMod<0)?'<span class="buff" style="background:linear-gradient(180deg,#9fb0c9,#6d7793);border-color:#4a5566;color:#0f1420">浓雾 −1</span>':'';
+      slot=`<div class="${cls.join(' ')}" data-lane="${li}" data-unit="1">
+        <span class="sex ${d.sex==='m'?'m':'f'}">${d.sex==='m'?'♂':'♀'}</span>
+        ${buffs.length?`<span class="buff">${buffs.join('/')}</span>`:''}${debuff}
+        <div class="fig">${figureSVG(u.id,44)}</div>
+        <div class="uname">${d.name}</div>
+        <div class="ustat"><span>攻 <b>${unitAtk(li)}</b></span><span>出手 ${Math.max(0,u.hitsLeft)}/${d.hits}</span></div>
+        <div class="hpd">${Array.from({length:u.maxhp},(_,i)=>`<i class="${i<u.hp?'':'off'}"></i>`).join('')}</div>
+      </div>`;
+    }else slot='<span>把门番放到这条线上</span>';
+
+    el.innerHTML=`<div class="scene"><span class="snm">${['左线','中线','右线'][li]}</span>
+        <span class="stag ${sc.id}">${sc.icon} ${sc.name}</span>
+        <span class="stp">${sc.tip}</span></div>
+      <div class="ghosts">${ghosts}</div>
+      <div class="slotline" data-lane="${li}">${slot}</div>`;
+    wrap.appendChild(el);
+  });
+}
+
+function foeAtkModHere(li){
+  let m=S.foeAtkMod;
+  if(hasScene(li,'tower')) m-=1;
+  return m;
+}
+function unitAtk(li){
+  const u=S.lanes[li]&&S.lanes[li].unit; if(!u) return 0;
+  const d=UNITS[u.id];
+  let a=d.atk+(u.atkUp?1:0)+S.unitAtkMod;
+  if(hasScene(li,'street')) a+=1;
+  return Math.max(1,a);
+}
+function atkBreakdown(li){
+  const u=S.lanes[li]&&S.lanes[li].unit; if(!u) return '';
+  const d=UNITS[u.id];
+  const parts=['基础 '+d.atk];
+  if(u.atkUp) parts.push('+1 淬火');
+  if(S.unitAtkMod) parts.push((S.unitAtkMod>0?'+':'')+S.unitAtkMod+' 天气/敌方');
+  if(hasScene(li,'street')) parts.push('+1 街区');
+  return parts.join(' ');
+}
+
+function renderHand(){
+  const box=$('#hand'); box.innerHTML='';
+  if(!S.hand.length){ box.innerHTML='<span style="font-size:12px;color:var(--ink-faint);padding:10px">手牌空了，结束回合后会补牌。</span>'; return; }
+  S.hand.forEach((cid,idx)=>{
+    const unitC=isUnit(cid);
+    const info=unitC?UNITS[cid]:spellById(cid);
+    const cost=unitC?1:info.cost;
+    const rested=unitC&&S.benched.includes(cid);
+    const el=document.createElement('div');
+    el.className='card '+(unitC?'':'spell')+(S.echo<cost?' poor':'')+(rested?' resting':'')
+      +((sel&&sel.type==='hand'&&sel.idx===idx)?' sel':'')+(dealAnim?' deal':'');
+    el.dataset.idx=idx;
+    if(dealAnim) el.style.animationDelay=(idx*70)+'ms';
+    const m=unitC?modOf(cid):null;
+    const tag=unitC
+      ? ('门番 · 耐久 '+info.hp+(m.hp?'(+'+m.hp+')':'')+(m.atk?' · 攻+'+m.atk:''))
+      : '法术 · 用完进弃牌堆';
+    el.innerHTML=`<div class="ctop"><span class="cost">${cost}</span><span class="glyph">${info.glyph}</span></div>
+      <div class="cname">${info.name}</div>
+      <div class="ctag">${tag}</div>
+      <div class="ctext">${info.brief}</div>
+      ${rested?'<div class="rest">休息中</div>':''}`;
+    el.addEventListener('pointerdown', e=>onCardDown(e, idx, el));
+    box.appendChild(el);
+  });
+  dealAnim=false;
+}
+
+/* ============ 拖拽 ============ */
+function onCardDown(e, idx, el){
+  if(busy || S.over) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const r = el.getBoundingClientRect();
+  drag = { idx, el, r, sx: e.clientX, sy: e.clientY, moved:false, ghost:null, pid:e.pointerId };
+  try{ el.setPointerCapture(e.pointerId); }catch(_){}
+  el.addEventListener('pointermove', onCardMove);
+  el.addEventListener('pointerup', onCardUp);
+  el.addEventListener('pointercancel', onCardUp);
+}
+function cacheLaneRects(){
+  laneRects = $$('#lanes .lane').map(el=>({li:+el.dataset.lane, r:el.getBoundingClientRect()}));
+}
+function laneUnder(x,y){
+  for(let i=0;i<laneRects.length;i++){
+    const it = laneRects[i];
+    if(x>=it.r.left && x<=it.r.right && y>=it.r.top && y<=it.r.bottom) return it.li;
+  }
+  return -1;
+}
+function onCardMove(e){
+  if(!drag) return;
+  if(drag.pid!==undefined && e.pointerId!==undefined && e.pointerId!==drag.pid) return;
+  const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+  if(!drag.moved){
+    if(Math.hypot(dx,dy) < (IS_TOUCH ? 9 : 6)) return;
+    drag.moved = true;
+    cacheLaneRects();
+    const g = drag.el.cloneNode(true);
+    g.className = 'card drag-ghost';
+    Object.assign(g.style, {
+      left: drag.r.left+'px', top: drag.r.top+'px',
+      width: drag.r.width+'px', height: drag.r.height+'px'
+    });
+    document.body.appendChild(g);
+    drag.ghost = g;
+    drag.el.classList.add('is-dragging');
+  }
+  if(!drag.ghost) return;
+  drag.ghost.style.transform = 'translate3d('+(e.clientX-drag.sx)+'px,'+(e.clientY-drag.sy)+'px,0) rotate(-2deg) scale(1.04)';
+  const li = laneUnder(e.clientX, e.clientY);
+  $$('#lanes .lane').forEach(el=>el.classList.remove('candeploy','canmove'));
+  if(li>=0 && isUnit(S.hand[drag.idx]) && !S.lanes[li].unit) laneEl(li).classList.add('candeploy');
+}
+function onCardUp(e){
+  if(!drag) return;
+  const d = drag; drag = null;
+  d.el.removeEventListener('pointermove', onCardMove);
+  d.el.removeEventListener('pointerup', onCardUp);
+  d.el.removeEventListener('pointercancel', onCardUp);
+  d.el.classList.remove('is-dragging');
+  if(d.ghost) d.ghost.remove();
+  $$('#lanes .lane').forEach(el=>el.classList.remove('candeploy','canmove'));
+
+  if(!d.moved){ selectHand(d.idx); return; }
+  const li = laneUnder(e.clientX, e.clientY);
+  const cid = S.hand[d.idx]; if(!cid) return;
+  if(isUnit(cid)){
+    if(li<0) return notify('把门番拖到三条线里的一条上。','warn');
+    if(S.benched.includes(cid)) return notify(UNITS[cid].name+' 刚撤退，本回合先歇着。','warn');
+    if(S.lanes[li].unit) return notify('那条线上已经有门番了。','warn');
+    deployUnit(d.idx, li);
+  }else{
+    if(li<0){ selectHand(d.idx); return; }
+    castSpell(d.idx);
+  }
+}
+
+function renderStatus(){
+  const bar=$('#statusbar'), txt=$('#statusText'), acts=$('#statusActions');
+  if(!txt||!acts) return;
+  const btn=(t,attr,cls)=>`<button class="${cls||''}" ${attr}>${t}</button>`;
+  if(S.over){ bar.classList.remove('on'); txt.textContent='这一局结束了。'; acts.innerHTML=''; return; }
+  if(busy){ bar.classList.add('on'); txt.textContent='敌方正在行动……'; acts.innerHTML=''; return; }
+
+  if(sel&&sel.type==='hand'&&S.hand[sel.idx]){
+    const cid=S.hand[sel.idx];
+    bar.classList.add('on');
+    if(isUnit(cid)){
+      txt.innerHTML=`把 <b>${UNITS[cid].name}</b> 放到哪条线？<b>拖动</b>到线上，或点一条发光的线；点其他地方取消。`;
+      acts.innerHTML=btn('取消','data-cancel="1"');
+    }else{
+      const sp=spellById(cid);
+      txt.innerHTML=`使用 <b>${sp.name}</b>？消耗 ${sp.cost} 点回响 —— ${sp.desc}`;
+      acts.innerHTML=(S.echo>=sp.cost?btn('使用','data-cast="1"','ok'):'')+btn('取消','data-cancel="1"');
+    }
+    return;
+  }
+  if(sel&&sel.type==='unit'&&S.lanes[sel.lane]&&S.lanes[sel.lane].unit){
+    const u=S.lanes[sel.lane].unit, d=UNITS[u.id];
+    const canAct=(u.hitsLeft>0);
+    bar.classList.add('on');
+    txt.innerHTML=`<b>${d.name}</b>（攻 ${unitAtk(sel.lane)}：${atkBreakdown(sel.lane)}）：点<b style="color:var(--red)">红色</b>的敌人进攻，点<b style="color:var(--blue)">蓝色</b>的线换防。`+
+      (canAct?`<span style="color:var(--ink-faint)">（出手 1 回响，还剩 ${u.hitsLeft} 次）</span>`:'<span style="color:var(--ember)">（本回合已出手完）</span>');
+    acts.innerHTML=btn('查看/撤退/强化','data-unitpanel="1"')
+      +(S.ember>=mode().upCost?btn('强化可用','data-unitpanel="1"','ember'):'')+btn('取消','data-cancel="1"');
+    return;
+  }
+  bar.classList.remove('on');
+  txt.innerHTML='拖动卡牌到线上部署　·　或点手牌选中再点线　·　点门番再点敌人进攻';
+  acts.innerHTML=btn('看规则','data-openrules="1"');
+}
+
+function setStatus(t,on){
+  const txt=$('#statusText'), bar=$('#statusbar');
+  if(txt) txt.innerHTML=t;
+  if(bar) bar.classList.toggle('on',!!on);
+}
+
+const laneEl=li=>$(`.lane[data-lane="${li}"]`);
+
+function validTargets(li){
+  const l=S.lanes[li]; if(!l||!l.unit) return [];
+  const d=UNITS[l.unit.id];
+  if(d.sweep) return gammaTargets(li);
+  const out=[];
+  const ok=foe=>!(FOES[foe.id].stealth&&!foe.revealed&&!d.pierce);
+  l.foes.forEach((f,fi)=>{ if(ok(f)) out.push({lane:li,idx:fi,foe:f}); });
+  return out;
+}
+function floatAt(elm,txt,cls){
+  if(!elm) return;
+  const r=elm.getBoundingClientRect();
+  const s=document.createElement('div'); s.className='floatnum '+(cls||''); s.textContent=txt;
+  s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+r.height/2)+'px';
+  document.body.appendChild(s); setTimeout(()=>s.remove(),1050);
+}
+function shakeScreen(){
+  try{ $('#app').animate([{transform:'translate(0,0)'},{transform:'translate(-6px,4px)'},
+    {transform:'translate(5px,-4px)'},{transform:'translate(-3px,2px)'},{transform:'translate(0,0)'}],
+    {duration:340,easing:'ease-in-out'}); }catch(_){}
+}
+function notify(msg,type,ms){
+  type=type||'info'; ms=ms||2400;
+  const el=document.createElement('div');
+  el.className='toast '+(type==='info'?'':type); el.innerHTML=msg;
+  $('#toasts').appendChild(el);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),240);},ms);
+}
+function showBanner(t,ms,cls){
+  ms=ms||900;
+  const b=$('#banner'); const tx=$('#bannerText');
+  if(!b||!tx) return;
+  tx.textContent=t;
+  b.className='banner '+(cls||'');
+  b.classList.add('on');
+  clearTimeout(b._t);
+  b._t=setTimeout(()=>b.classList.remove('on'),ms);
+}
+function sceneFlash(li,text){
+  const el=laneEl(li); if(!el) return;
+  el.dataset.sceneFx=text;
+  el.classList.add('sceneFlash');
+  setTimeout(()=>el.classList.remove('sceneFlash'),1500);
+}
+function fxRain(){
+  const layer=$('#fxLayer'); if(!layer) return;
+  for(let i=0;i<44;i++){
+    const d=document.createElement('div');
+    d.className='fx-drop';
+    d.style.left=(Math.random()*100)+'vw';
+    d.style.animationDuration=(0.7+Math.random()*0.6)+'s';
+    d.style.animationDelay=(Math.random()*0.4)+'s';
+    layer.appendChild(d);
+    setTimeout(()=>d.remove(),1700);
+  }
+}
+function fxDome(){
+  const d=document.createElement('div');
+  d.className='fx-dome';
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),1300);
+}
+function fxEmber(){
+  const layer=$('#fxLayer'); if(!layer) return;
+  for(let i=0;i<18;i++){
+    const d=document.createElement('div');
+    d.className='fx-drop';
+    d.style.background='linear-gradient(180deg,rgba(232,160,76,0),rgba(232,160,76,.95))';
+    d.style.left=(35+Math.random()*30)+'vw';
+    d.style.width='4px'; d.style.height='18px';
+    d.style.animationDuration=(0.6+Math.random()*0.5)+'s';
+    d.style.animationDelay=(Math.random()*0.3)+'s';
+    layer.appendChild(d);
+    setTimeout(()=>d.remove(),1500);
+  }
+}
+function safeAnimate(el,keyframes,opts){ try{ if(el&&el.animate) el.animate(keyframes,opts); }catch(_){} }
+function lungeUnit(li){ const el=laneEl(li)&&laneEl(li).querySelector('.unit'); if(!el) return;
+  safeAnimate(el,[{transform:'translateY(0) scale(1)'},{transform:'translateY(-13px) scale(1.08)'},{transform:'translateY(0) scale(1)'}],{duration:360,easing:'ease-out'}); }
+function lungeFoe(li,fi){ const el=$(`.foe[data-lane="${li}"][data-foe="${fi}"]`); if(!el) return;
+  safeAnimate(el,[{transform:'translateY(0) scale(1)'},{transform:'translateY(11px) scale(1.1)'},{transform:'translateY(0) scale(1)'}],{duration:360,easing:'ease-out'}); }
+function hitUnit(li){ const el=laneEl(li)&&laneEl(li).querySelector('.unit');
+  if(el){ el.classList.add('hurt'); setTimeout(()=>el.classList.remove('hurt'),400); } }
+function hitFoe(li,fi){ const el=$(`.foe[data-lane="${li}"][data-foe="${fi}"]`);
+  if(el){ el.classList.add('hurt'); setTimeout(()=>el.classList.remove('hurt'),400); } }
+function healUnit(li){ const el=laneEl(li)&&laneEl(li).querySelector('.unit');
+  if(el){ el.classList.add('heal'); setTimeout(()=>el.classList.remove('heal'),620); } }
+async function flashLaneAI(li,ms){
+  ms=ms||300;
+  const el=laneEl(li); if(el) el.classList.add('underAI');
+  await sleep(ms);
+  if(el) el.classList.remove('underAI');
+}
+
+function selectHand(idx){
+  if(busy||S.over) return;
+  const cid=S.hand[idx]; if(!cid) return;
+  if(sel&&sel.type==='hand'&&sel.idx===idx){ sel=null; render(); return; }
+  sel={type:'hand',idx}; render();
+  if(isUnit(cid)) notify('拿起 <b>'+UNITS[cid].name+'</b>：拖动到线上，或点一条发光的线。','ok',2200);
+}
+
+function onLaneClick(e){
+  if(busy||S.over) return;
+  const laneNode=e.target.closest('.lane'); if(!laneNode) return;
+  const li=+laneNode.dataset.lane;
+
+  if(sel&&sel.type==='hand'){
+    const cid=S.hand[sel.idx];
+    if(cid&&isUnit(cid)){
+      if(S.benched.includes(cid)){ notify(UNITS[cid].name+' 刚撤退，本回合不能再上场。','warn',2000); return; }
+      if(S.lanes[li].unit){ notify('那条线上已经有门番了。点其他空线，或按「取消」。','warn',1800); return; }
+      deployUnit(sel.idx,li); return;
+    }
+    return;
+  }
+
+  if(sel&&sel.type==='unit'){
+    const foeNode=e.target.closest('.foe');
+    if(foeNode){
+      const fi=+foeNode.dataset.foe, fl=+foeNode.dataset.lane;
+      if(validTargets(sel.lane).some(t=>t.lane===fl&&t.idx===fi)){ playerAttack(sel.lane,fl,fi); return; }
+      const tf=S.lanes[fl].foes[fi];
+      const nm=tf?FOES[tf.id].name:'那个';
+      notify(nm+' 现在打不到'+(tf&&FOES[tf.id].stealth&&!tf.revealed?'（它隐着身）':'')+'。','warn',2000);
+      return;
+    }
+    if(li!==sel.lane){
+      if(S.lanes[li].unit){ notify('那条线上已经有人了。','warn',1800); return; }
+      moveUnit(sel.lane,li); return;
+    }
+    openUnitPanel(sel.lane); return;
+  }
+
+  const unitNode=e.target.closest('.unit');
+  if(unitNode){ sel={type:'unit',lane:li}; render(); return; }
+
+  if(sel){ sel=null; render(); }
+}
+
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-cancel]')){ sel=null; render(); return; }
+  if(e.target.closest('[data-cast]')){ if(sel&&sel.type==='hand') castSpell(sel.idx); return; }
+  if(e.target.closest('[data-unitpanel]')){ if(sel&&sel.type==='unit') openUnitPanel(sel.lane); return; }
+  if(e.target.closest('[data-openrules]')){ openRules(); return; }
+
+  if(!$('#scr-game').classList.contains('active')) return;
+  if(e.target.closest('.card')||e.target.closest('.lane')||e.target.closest('button')||
+     e.target.closest('.panel')||e.target.closest('.modal')||e.target.closest('#dlg')) return;
+  if(sel){ sel=null; render(); }
+});
+
+$('#lanes').addEventListener('click',onLaneClick);
+
+function deployUnit(idx,li){
+  const cid=S.hand[idx]; if(!cid||!isUnit(cid)) return;
+  if(S.benched.includes(cid)) return notify(UNITS[cid].name+' 刚撤退，本回合先歇着。','warn');
+  if(S.lanes[li].unit) return notify('那条线上已经有人了。','warn');
+  if(S.echo<1) return notify('回响不够了（上场需要 1 点）。','warn');
+  snapshot('部署 '+UNITS[cid].name);
+  S.echo-=1;
+  S.hand.splice(idx,1);
+  const d=UNITS[cid];
+  const m=modOf(cid);
+  const bonus=hasScene(li,'suburb')?1:0;
+  const maxhp=d.hp+bonus+(m.hp||0);
+  S.lanes[li].unit={id:cid,hp:maxhp,maxhp,hitsLeft:d.hits,atkUp:!!m.atk,hpUp:!!m.hp};
+  if(bonus) sceneFlash(li,'郊区：耐久上限 +1');
+  if(cid==='delta'){
+    const n=revealAllStealth('德尔塔出场：{n} 只隐身敌人显形了。');
+    if(n) fxRain();
+  }
+  sel=null; render();
+  notify('<b>'+d.name+'</b> 站上了第'+['一','二','三'][li]+'条线。'+((m.atk||m.hp)?'（已保留他的强化）':''),'ok',2400);
+  if(Math.random()<0.3) say('start', 0.3, cid);
+}
+
+function moveUnit(from,to){
+  if(S.echo<1) return notify('回响不够了（换防需要 1 点）。','warn');
+  snapshot('换防');
+  S.echo-=1;
+  S.lanes[to].unit=S.lanes[from].unit;
+  S.lanes[from].unit=null;
+  sel=null;
+  render();
+  notify('换到了另一条线。','info',1900);
+}
+
+function retreat(li){
+  const l=S.lanes[li]; if(!l||!l.unit) return;
+  if(S.echo<1) return notify('回响不够（撤退需要 1 点）。','warn');
+  const u=l.unit, d=UNITS[u.id];
+  snapshot('撤退 '+d.name);
+  S.echo-=1;
+  S.hand.push(u.id);
+  if(!S.benched.includes(u.id)) S.benched.push(u.id);
+  l.unit=null; sel=null;
+  $('#unitPanel').classList.remove('on');
+  render();
+  notify('<b>'+d.name+'</b> 撤回后方，本回合不能再上场（强化会保留）。','ok',2600);
+  say('retire',0.7,u.id);
+}
+
+function playerAttack(li,fl,fi){
+  const l=S.lanes[li]; if(!l||!l.unit) return;
+  const u=l.unit, d=UNITS[u.id];
+  if(!(u.hitsLeft>0)) return notify(d.name+' 本回合已经出手完了。','warn');
+  if(S.echo<1) return notify('回响不够了（出手需要 1 点）。','warn');
+
+  snapshot(d.name+' 进攻');
+  S.echo-=1;
+  u.hitsLeft--;
+
+  const dmg=unitAtk(li);
+  const targets=[];
+  if(d.sweep){ gammaTargets(li).forEach(t=>{ if(t.foe) targets.push(t.foe); }); }
+  else { const f=S.lanes[fl].foes[fi]; if(f) targets.push(f); }
+
+  lungeUnit(li);
+  if(d.pierce){
+    let n=0;
+    S.lanes.forEach(ln=>ln.foes.forEach(f=>{ if(FOES[f.id].stealth&&!f.revealed){ f.revealed=true; n++; } }));
+    if(n) notify('唤雨：'+n+' 只隐身敌人显形了。','ok',2400);
+  }
+  lungeUnit(li);
+
+  targets.forEach((foe,k)=>{
+    setTimeout(()=>{
+      try{
+        if(!S.lanes.some(ln=>ln.foes.includes(foe))) return;
+        const base=FOES[foe.id];
+        let real=dmg;
+        if(u.id==='alpha'&&base.boss) real+=1;
+        if(base.veil&&S.weather!=='rain') real=Math.max(1,real-1);
+        foe.hp-=real;
+        const li2=S.lanes.findIndex(ln=>ln.foes.includes(foe));
+        if(li2<0) return;
+        const fi2=S.lanes[li2].foes.indexOf(foe);
+        lungeFoe(li2,fi2); hitFoe(li2,fi2);
+        floatAt($('.foe[data-lane="'+li2+'"][data-foe="'+fi2+'"]'),'-'+real,'bad');
+        if(foe.hp<=0) killFoeRef(foe, u.id==='beta'?1:0);
+        render();
+      }catch(err){ console.error('[attack]',err); }
+    },k*150);
+  });
+
+  say('attack',0.3,u.id);
+  sel=(u.hitsLeft>0)?{type:'unit',lane:li}:null;
+  setTimeout(()=>{ try{ render(); }catch(_){} },targets.length*150+80);
+}
+
+function killFoeRef(foe,bonus){
+  const li=S.lanes.findIndex(ln=>ln.foes.includes(foe)); if(li<0) return;
+  const base=FOES[foe.id];
+  const fi=S.lanes[li].foes.indexOf(foe);
+  const gain=base.ember+(bonus||0);
+  const el=$('.foe[data-lane="'+li+'"][data-foe="'+fi+'"]');
+  if(el){
+    const r=el.getBoundingClientRect();
+    const s=document.createElement('div'); s.className='floatnum ember'; s.textContent='+'+gain+' 余烬';
+    s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+r.height/2)+'px';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),1050);
+  }
+  S.lanes[li].foes.splice(fi,1);
+  S.ember=Math.min(EMBER_CAP,S.ember+gain); S.kills++;
+  if(base.boss) notify('击退了<b>夜之领主</b>！','ok',2600);
+}
+
+function castSpell(idx){
+  const cid=S.hand[idx]; if(!cid||isUnit(cid)) return;
+  const sp=spellById(cid);
+  if(S.echo<sp.cost) return notify('回响不够：'+sp.name+' 需要 '+sp.cost+' 点。','warn');
+  snapshot('释放 '+sp.name);
+  S.echo-=sp.cost;
+  S.hand.splice(idx,1);
+  if(cid!=='echo') S.discard.push(cid);
+  sel=null;
+
+  if(cid==='rain'){
+    fxRain();
+    let n=0;
+    const all=[].concat(S.lanes[0].foes,S.lanes[1].foes,S.lanes[2].foes);
+    all.forEach(f=>{ if(FOES[f.id].stealth&&!f.revealed){f.revealed=true;n++;} f.hp-=1; });
+    all.filter(f=>f.hp<=0).forEach(f=>killFoeRef(f,0));
+    notify('旧时之雨：'+(n?n+' 只隐身敌人显形，':'')+'敌人各受 1 点伤害。','ok',2800);
+    showBanner('☔ 旧时之雨',900,'wx');
+  }else if(cid==='seal'){
+    fxDome();
+    const before=S.shield;
+    const bonus=mode().sealBonus;
+    S.shield=clamp(S.shield+bonus,0,S.shieldMax);
+    S.shieldGuard=Math.max(S.shieldGuard,1);
+    floatAt($('#shieldBar'),'+'+(S.shield-before),'good');
+    notify('圣域隔离区：护盾 +'+(S.shield-before)+'，本回合撞盾伤害 −1。','ok',2600);
+    showBanner('✚ 护盾 +'+(S.shield-before),900,'scene');
+  }else if(cid==='echo'){
+    S.echo+=3;
+    notify('旧日残响：回响 +3。这张卡用掉就移出本局，不会再回来。','ok',2800);
+    showBanner('♪ 回响 +3',900,'wx');
+  }else if(cid==='heal'){
+    let n=0;
+    S.lanes.forEach((ln,li)=>{
+      const u=ln.unit; if(!u||u.hp>=u.maxhp) return;
+      u.hp=Math.min(u.maxhp,u.hp+2); n++;
+      healUnit(li); floatAt(laneEl(li).querySelector('.unit'),'+2','good');
+    });
+    notify(n?('钟声回响：'+n+' 名门番各回复 2 点耐久。'):'钟声回响：场上没有人需要治疗。','ok',2600);
+    showBanner('🕯 钟声回响',900,'scene');
+  }else if(cid==='ward'){
+    S.foeAtkMod-=2;
+    notify('铁壁之咒：本回合所有敌人的攻击 −2（最低 1）。','ok',2600);
+    showBanner('🛡 铁壁之咒',900,'scene');
+  }
+  render();
+  say('spell',0.5);
+}
+
+function openUnitPanel(li){
+  const l=S.lanes[li]; if(!l||!l.unit) return;
+  const u=l.unit, d=UNITS[u.id];
+  const canAct=(u.hitsLeft>0);
+  const sc=sceneById(sceneOf(li));
+  const cost=mode().upCost;
+  const m=modOf(u.id);
+  const canAtkUp=!m.atk && S.ember>=cost;
+  const canHpUp=!m.hp && S.ember>=cost;
+  const canRetreat=(S.echo>=1);
+  const canRain=(u.id==='delta'&&S.weather!=='rain'&&S.echo>=1);
+
+  $('#unitPanelBody').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:58px;height:72px">${figureSVG(u.id,58)}</div>
+      <div><h3>${d.name} <span style="font-size:12px;color:var(--ink-faint)">${d.title} · ${d.sex==='m'?'男性门番':'女性门番'}</span></h3>
+        <div class="sub">${['左线','中线','右线'][li]} · ${sc.icon}${sc.name} · 耐久 ${u.hp}/${u.maxhp} · 出手 ${Math.max(0,u.hitsLeft)}/${d.hits}</div></div>
+    </div>
+    <div class="eff"><b>攻击力 ${unitAtk(li)}</b> ＝ ${atkBreakdown(li)}<br><br>${d.desc}</div>
+    <div style="font-size:12px;color:var(--ink-dim);margin-bottom:6px">当前余烬：<b style="color:var(--ember)">${S.ember}</b> / ${EMBER_CAP}　·　强化成本：${cost} 枚</div>
+    <div class="upgrid">
+      <button class="upb" id="upAtk" ${canAtkUp?'':'disabled'}>
+        <b>🔥 淬火</b><small>攻击永久 +1（撤退、退场再上场都保留）。</small><span class="pz ${canAtkUp?'':'no'}">${m.atk?'已经淬过火了':((S.ember>=cost)?('花 '+cost+' 枚余烬'):('余烬不够（要 '+cost+' 枚）'))}</span></button>
+      <button class="upb" id="upHp" ${canHpUp?'':'disabled'}>
+        <b>🛡 加固</b><small>耐久上限永久 +1，并回满。</small><span class="pz ${canHpUp?'':'no'}">${m.hp?'已经加固过了':((S.ember>=cost)?('花 '+cost+' 枚余烬'):('余烬不够（要 '+cost+' 枚）'))}</span></button>
+    </div>
+    ${u.id==='delta'&&S.weather!=='rain'?`<div class="upgrid one" style="margin-top:9px">
+      <button class="upb" id="upRain" ${canRain?'':'disabled'}><b>🌧 唤雨</b><small>花 1 回响，把本回合天气改成大雨：全场隐身显形，夜之领主的雾甲也会失效。</small><span class="pz">花 1 点回响</span></button></div>`:''}
+    <div class="foot"><button id="upClose">关闭</button>
+      <button class="back" id="upRetreat" ${canRetreat?'':'disabled'}>↩ 撤退（1 回响）</button>
+      <button class="go" id="upAct" ${canAct?'':'disabled'}>${canAct?'指挥进攻':'本回合已出手'}</button></div>`;
+  $('#unitPanel').classList.add('on');
+  $('#upClose').onclick=()=>{ $('#unitPanel').classList.remove('on'); sel=null; render(); };
+  $('#upAtk').onclick=()=>doUpgrade(li,'atk');
+  $('#upHp').onclick=()=>doUpgrade(li,'hp');
+  $('#upAct').onclick=()=>{ $('#unitPanel').classList.remove('on'); sel={type:'unit',lane:li}; render(); };
+  const rb=$('#upRetreat'); if(rb) rb.onclick=()=>retreat(li);
+  const rn=$('#upRain'); if(rn) rn.onclick=()=>callRain(li);
+}
+$('#unitPanel').addEventListener('click',e=>{ if(e.target.id==='unitPanel') $('#unitPanel').classList.remove('on'); });
+
+/* ============ 德尔塔·唤雨（bug 修复版） ============ */
+function callRain(li){
+  const l=S.lanes[li]; if(!l||!l.unit) return;
+  if(S.echo<1) return notify('回响不够（唤雨需要 1 点）。','warn');
+
+  const before=S.weather;
+  const beforeName=(WEATHER[before]||WEATHER.drizzle).name;
+  const beforeIcon=(WEATHER[before]||WEATHER.drizzle).icon;
+
+  snapshot('唤雨');
+  S.echo-=1;
+
+  /* 从浓雾改成大雨：把浓雾带来的攻击 −1 撤销 */
+  if(before==='fog') S.unitAtkMod=Math.min(0,S.unitAtkMod+1);
+
+  /* 直接改写天气状态；随后 render() → renderWeather() 会把「整个天气栏」重建为大雨 */
+  S.weather='rain';
+
+  revealAllStealth('唤雨：{n} 只隐身敌人显形了。');
+  fxRain();
+  showBanner('🌧 大雨落下',1100,'wx');
+  notify('德尔塔唤来了大雨：'+beforeIcon+' '+beforeName+' → 🌧 <b>大雨</b>。隐身全部显形，夜之领主的雾甲失效。','ok',3200);
+
+  $('#unitPanel').classList.remove('on');
+  sel=null;
+  render();          /* 天气栏、场景条、敌人立绘全部按新天气重绘 */
+  say('spell',0.8);
+}
+
+function doUpgrade(li,kind){
+  const l=S.lanes[li]; if(!l||!l.unit) return;
+  const u=l.unit, d=UNITS[u.id];
+  const cost=mode().upCost;
+  const m=modOf(u.id);
+  if(kind==='atk'&&m.atk) return notify(d.name+' 已经淬过火了。','warn');
+  if(kind==='hp'&&m.hp) return notify(d.name+' 已经加固过了。','warn');
+  if(S.ember<cost) return notify('余烬不够（需要 '+cost+' 枚）。','warn');
+  snapshot('强化 '+d.name);
+  S.ember-=cost;
+  fxEmber();
+  if(!S.mods[u.id]) S.mods[u.id]={atk:0,hp:0};
+  if(kind==='atk'){
+    S.mods[u.id].atk=(S.mods[u.id].atk||0)+1;
+    u.atkUp=true;
+    notify(d.name+' 完成<b>淬火</b>：攻击永久 +1（撤退或退场再上场也保留）。','ok',3000);
+  }else{
+    S.mods[u.id].hp=(S.mods[u.id].hp||0)+1;
+    u.hpUp=true; u.maxhp++; u.hp=u.maxhp;
+    notify(d.name+' 完成<b>加固</b>：耐久上限 +1 并回满（撤退或退场再上场也保留）。','ok',3000);
+  }
+  showBanner('🔥 '+d.name+' 强化',900,'ember');
+  $('#unitPanel').classList.remove('on');
+  sel=null;
+  render();
+  say('ember',0.7,u.id);
+}
+
+function draw(n,silent){
+  const cap=mode().handMax;
+  const out=[];
+  for(let i=0;i<n;i++){
+    if(S.hand.length>=cap) break;
+    if(!S.deck.length){
+      if(!S.discard.length) break;
+      S.deck=shuffle(S.discard); S.discard=[];
+      if(!silent) notify('牌库空了，弃牌堆洗回牌库。','ok',2400);
+    }
+    const c=S.deck.shift();
+    S.hand.push(c);
+    out.push(c);
+  }
+  return out;
+}
+const makeFoe=id=>{
+  const base=FOES[id];
+  const hp=Math.max(1, base.hp + (id==='lord'?0:mode().enemyHp));
+  return {uid:uidSeq++,id,hp,maxhp:hp,revealed:!base.stealth};
+};
+
+function revealAllStealth(announce){
+  let n=0;
+  S.lanes.forEach((ln,li)=>ln.foes.forEach((f,fi)=>{
+    if(FOES[f.id].stealth&&!f.revealed){
+      f.revealed=true; n++;
+      const el=$('.foe[data-lane="'+li+'"][data-foe="'+fi+'"]');
+      if(el){ el.classList.add('reveal'); setTimeout(()=>el.classList.remove('reveal'),620); }
+    }
+  }));
+  if(n&&announce) notify(announce.replace('{n}',n),'ok',2800);
+  return n;
+}
+
+function startTurn(){
+  const M=mode();
+  S.night=Math.min(3,Math.ceil(S.round/5));
+  S.echo=M.echo;
+  S.unitAtkMod=0;
+  S.foeAtkMod=(S.round>=11?M.night3Atk:0);
+  S.aiMove=null;
+  S.shieldGuard=0;
+  S.benched=[];
+
+  if(S.night!==lastNight){
+    lastNight=S.night;
+    showBanner('🌙 第'+['一','二','三'][S.night-1]+'夜 · 开始',1400,'night');
+    if(S.night===3&&M.night3Atk>0) notify('第三夜：幽灵的攻击 +'+M.night3Atk+'。','bad',3200);
+  }
+
+  const back=[];
+  S.returning=S.returning.filter(r=>{
+    if(r.backAt<=S.round){ S.hand.push(r.id); back.push(UNITS[r.id].name); return false; }
+    return true;
+  });
+  if(back.length) notify('🕯 '+back.join('、')+' 休息完了，回到手上。','ok',3000);
+
+  const got=draw(2,true);
+  if(!got.length) notify('手牌已满（上限 '+M.handMax+' 张），这回合没有翻牌 —— 天气不变。','warn',2800);
+
+  let newWeather=S.weather;
+  if(got.length>0){
+    const unitCount=got.filter(isUnit).length;
+    if (unitCount >= 2) newWeather = 'rain';
+    else if (unitCount === 1) newWeather = 'drizzle';
+    else newWeather = Math.random() < 0.5 ? 'fog' : 'clear';
+  }
+  const weatherChanged=(newWeather!==S.weather);
+  S.weather=newWeather;
+
+  if(S.weather==='fog') S.unitAtkMod=-1;
+
+  const w=WEATHER[S.weather];
+  if(weatherChanged) showBanner(w.icon+' 天气转为 '+w.name+'　—　'+w.desc,1600,'wx');
+  if(got.length){
+    const names=got.map(id=>isUnit(id)?UNITS[id].name:spellById(id).name).join('、');
+    notify('翻牌：'+names+' → <b>'+w.name+'</b>（'+w.desc+'）','info',3000);
+  }
+
+  if(S.weather==='rain'){
+    const n=revealAllStealth('大雨：{n} 只隐身敌人显形了。');
+    if(n) fxRain();
+  }
+
+  S.lanes.forEach((ln,li)=>{
+    if(ln.unit&&hasScene(li,'church')&&ln.unit.hp<ln.unit.maxhp){
+      ln.unit.hp++;
+      sceneFlash(li,'教堂：回复 1 耐久');
+      setTimeout(()=>{ healUnit(li); floatAt(laneEl(li).querySelector('.unit'),'+1','good'); },80);
+    }
+  });
+
+  S.lanes.forEach(ln=>{ if(ln.unit){ const d=UNITS[ln.unit.id]; ln.unit.hitsLeft=d.hits; } });
+
+  render();
+  const stealthNow=S.lanes.some(ln=>ln.foes.some(f=>FOES[f.id].stealth&&!f.revealed));
+  if(stealthNow) say('stealth',0.7);
+  else if(S.round===1) say('start',1);
+}
+
+async function enemyPhase(){
+  const every=mode().specialEvery;
+  showBanner('敌 方 回 合',800,'enemy');
+  await sleep(820);
+
+  if(S.round%every===0||S.aiPending){
+    if(S.round%every===0&&!S.aiPending&&hasUnit('gamma')){
+      S.aiPending=true;
+      notify('伽马的谈判：敌方的特殊行动被<b>延后了一回合</b>（只延后一次，不会永久阻止）。','ok',3000);
+      say('talk',0.8);
+      await sleep(500);
+    }else{
+      S.aiPending=false;
+      const mv=pick(AI_MOVES);
+      S.aiMove=mv;
+      showBanner('敌方使用了「'+mv.name+'」',1100,'enemy');
+      notify('敌方特殊行动：<b>'+mv.name+'</b> —— '+mv.desc,'bad',3000);
+      if(mv.id==='fog'){ S.unitAtkMod-=1; }
+      else if(mv.id==='howl'){ S.foeAtkMod+=1; }
+      else{
+        const free=[0,1,2].filter(i=>S.lanes[i].foes.length<laneCap(i)).slice(0,2);
+        free.forEach(i=>{ S.lanes[i].foes.push(makeFoe('wanderer')); });
+      }
+      render(); await sleep(880);
+    }
+  }
+
+  const wave=waveOf(S.round);
+  for(let w=0;w<wave.length;w++){
+    const id=wave[w];
+    const free=[0,1,2].filter(i=>S.lanes[i].foes.length<laneCap(i));
+    if(!free.length) break;
+    free.sort((a,b)=>{
+      const ua=S.lanes[a].unit?1:0, ub=S.lanes[b].unit?1:0;
+      if(ua!==ub) return ua-ub;
+      return S.lanes[b].foes.length-S.lanes[a].foes.length;
+    });
+    const li=free[0];
+    S.lanes[li].foes.push(makeFoe(id));
+    render();
+    const g=laneEl(li)&&laneEl(li).querySelector('.ghosts');
+    if(g) floatAt(g,'＋','bad');
+    await sleep(320);
+  }
+  if(wave.length) say('enemy',0.45);
+  await sleep(320);
+
+  for(let li=0;li<3;li++){
+    const foeList=[].concat(S.lanes[li].foes);
+    for(let k=0;k<foeList.length;k++){
+      const foe=foeList[k];
+      if(!S.lanes[li].foes.includes(foe)) continue;
+      flashLaneAI(li,300);
+      await sleep(120);
+      lungeFoe(li,S.lanes[li].foes.indexOf(foe));
+      await sleep(230);
+      const dmg=Math.max(1,FOES[foe.id].atk+foeAtkModHere(li));
+      const unit=S.lanes[li].unit;
+      if(unit){
+        hitUnit(li);
+        unit.hp-=dmg;
+        floatAt(laneEl(li).querySelector('.unit'),'-'+dmg,'bad');
+        if(unit.hp<=0){
+          const d=UNITS[unit.id];
+          const m=modOf(unit.id);
+          notify('<b>'+d.name+'</b> 耐久归零，退了下去 —— 第 '+(S.round+2)+' 回合回到手上'+((m.atk||m.hp)?'（强化保留）':'')+'。','warn',3200);
+          say('down',0.75,unit.id);
+          S.lanes[li].unit=null;
+          S.returning.push({id:unit.id,backAt:S.round+2});
+        }else say('hurt',0.3,unit.id);
+      }else{
+        let real=dmg;
+        if(hasScene(li,'city')) real=Math.max(1,real-1);
+        if(FOES[foe.id].breach) real+=1;
+        real=Math.max(0, real - S.shieldGuard);
+        if(real<=0){
+          floatAt($('#shieldBar'),'挡下','good');
+          notify('护盾挡下了这一下（'+['左线','中线','右线'][li]+'）。','ok',2000);
+        }else{
+          S.shield=clamp(S.shield-real,0,S.shieldMax);
+          shakeScreen();
+          const segs=$$('.sseg.on'); const seg=segs[segs.length-1];
+          if(seg){ seg.classList.add('crack'); setTimeout(()=>seg.classList.remove('crack'),480); }
+          floatAt($('#shieldBar'),'-'+real,'bad');
+          notify('幽灵冲进了'+['左线','中线','右线'][li]+'：护盾 −'+real+'。','bad',2400);
+        }
+        if(hasScene(li,'city')&&real>0) sceneFlash(li,'市区：伤害 −1');
+      }
+      render();
+      await sleep(230);
+    }
+  }
+  await sleep(240);
+}
+
+async function endTurn(){
+  if(busy||S.over) return;
+  snapshot('结束回合');
+  busy=true; sel=null; render();
+  clearTimeout(watchdog);
+  watchdog=setTimeout(()=>{ if(busy){ busy=false; render(); } },12000);
+  try{
+    await enemyPhase();
+    if(S.shield<=0){ finish(false); return; }
+    S.round++;
+    if(S.round>ROUNDS_TOTAL){ finish(true); return; }
+    if(S.round>1&&(S.round-1)%5===0){
+      let healed=0;
+      S.lanes.forEach((ln,li)=>{
+        if(ln.unit&&ln.unit.hp<ln.unit.maxhp){
+          ln.unit.hp++; healed++;
+          healUnit(li);
+          floatAt(laneEl(li).querySelector('.unit'),'+1','good');
+        }
+      });
+      if(healed){
+        showBanner('🌅 一夜过去：全场回复 1 耐久',1200,'scene');
+        notify('一夜过去：在场门番各回复 1 点耐久。','ok',2600);
+        say('heal',0.9);
+      }
+      await sleep(600);
+    }
+    startTurn();
+    if(S.shield<=Math.ceil(S.shieldMax*0.3)&&!S.lowWarned){ S.lowWarned=true; say('lowshield',1); }
+    setStatus('该你了：拖动卡牌到线上部署。',false);
+  }catch(err){
+    console.error('[endTurn]',err);
+    notify('这一步出了点小状况，已经跳过，继续玩。','warn',2600);
+  }finally{
+    clearTimeout(watchdog);
+    busy=false;
+    if(!S.over) render();
+    updateUndoBtn();
+  }
+}
+function updateUndoBtn(){ const b=$('#btnUndo'); if(b) b.disabled=busy||!history.length; }
+
+function snapshot(label){ history.push({label,state:clone(S)}); if(history.length>60) history.shift(); }
+function undo(){
+  if(busy||!history.length) return;
+  const h=history.pop(); S=h.state; sel=null;
+  seenFoe=new Set(); seenUnit=new Set(); dealAnim=false;
+  drag=null;
+  lastWeather=S.weather;   /* 撤回后不触发天气闪烁 */
+  $('#unitPanel').classList.remove('on');
+  $('#result').classList.remove('on');
+  render(); notify('已撤回：'+h.label,'ok');
+}
+function finish(win){
+  S.over=true; busy=false;
+  try{ render(); }catch(_){}
+  $('#resTitle').textContent=win?'天 亮 了':'圣 域 失 守';
+  $('#resTitle').className='rt '+(win?'win':'lose');
+  $('#resText').innerHTML=win
+    ? '十五个回合过去，雨声终于轻了。<br>护盾还剩下一点微光。<br><br>——明天，还会下雨。'
+    : '护盾在你面前碎开，幽灵涌进了圣域。<br>钟楼的指针停住了。<br><br>——雨，还在下。';
+  $('#resRound').textContent=Math.min(S.round,ROUNDS_TOTAL);
+  $('#resShield').textContent=Math.max(0,S.shield);
+  $('#resKill').textContent=S.kills;
+  $('#result').classList.add('on');
+  setTimeout(()=>say(win?'win':'lose',1),240);
+}
+
+let dTimer=null, lastSay=0, pendingSay=null;
+const SAY_GAP=6500;
+const SAY_KEEP=6500;
+function dlgBlocked(){
+  try{
+    if($('#coach').classList.contains('on')) return true;
+    if($('#modal').classList.contains('active')) return true;
+    if($('#pdfBox').classList.contains('on')) return true;
+    const t=$('#toasts');
+    if(t&&t.querySelector('.toast:not(.out)')) return true;
+  }catch(_){}
+  return false;
+}
+function playSay(pool, unitId){
+  let arr = LINES[pool];
+  if (!arr || !arr.length) return;
+  if (unitId) {
+    const filtered = arr.filter(l => l.w === unitId);
+    if (filtered.length) arr = filtered;
+  }
+  const eligible = arr.filter(l => !l.cond || l.cond());
+  if (!eligible.length) return;
+  const now = Date.now();
+  if (now - lastSay < SAY_GAP) return;
+  lastSay = now;
+  const l = pick(eligible);
+  $('#dlgAv').innerHTML = figureSVG(l.w, 70);
+  $('#dlgName').textContent = UNITS[l.w].name;
+  $('#dlgText').textContent = l.t;
+  $('#dlg').classList.add('on');
+  clearTimeout(dTimer);
+  dTimer = setTimeout(() => $('#dlg').classList.remove('on'), SAY_KEEP);
+}
+function tryFlushSay(){
+  if(!pendingSay) return;
+  if(dlgBlocked()) return;
+  const p = pendingSay; pendingSay = null;
+  playSay(p.pool, p.unitId);
+}
+function say(pool, chance, unitId){
+  chance = chance === undefined ? 1 : chance;
+  const arr = LINES[pool]; if(!arr || !arr.length) return;
+  if(Math.random() > chance) return;
+  if(dlgBlocked()){ pendingSay = {pool, unitId}; return; }
+  playSay(pool, unitId);
+}
+setInterval(tryFlushSay,400);
+$('#dlg').onclick=()=>{ $('#dlg').classList.remove('on'); clearTimeout(dTimer); };
+
+const TUTORIAL=[
+  {t:'双方对抗',b:'你在<b>三条线</b>上布防，电脑指挥幽灵从对面进攻。撑过 <b>15 个回合（三夜）</b>就赢，护盾归零就输。',sel:'#lanes'},
+  {t:'4 个人，3 条线',b:'门番只有<b>4 名</b>，线只有 3 条 —— 所以永远有 1 个人在手上待命。谁上、谁下，每回合都要重新决定。',sel:'.handbar'},
+  {t:'两种操作方式',b:'<b>拖动</b>卡牌到线上部署；或者<b>点击</b>卡牌选中，再点线部署。门番选中后，点红色敌人进攻，点蓝色线换防，动作做完自动取消选中。',sel:'#lanes'},
+  {t:'回响与手牌都是预算',b:'每回合固定回响 5 点：上场 1 点、指挥进攻 1 点、换防或撤退 1 点、法术按卡面。<b>手牌上限 5 张</b> —— 满了就不再翻牌，天气也不会变。',sel:'.topbar'},
+  {t:'伽马只能横扫当前线',b:'伽马的横扫<b>只对她在的那条线</b>生效，不再清三条线。所以你必须判断哪条线敌人最多，把她换过去。',sel:'#lanes'},
+  {t:'特殊行动与伽马',b:'敌方每 4 回合触发一次特殊行动：<b>浓雾</b>（我方攻击 −1）、<b>犬吠</b>（幽灵攻击 +1）、<b>增援</b>（两条线各加 1 只徘徊者）。伽马在场时会把<b>这一次</b>特殊行动延后一回合，<b>但只延后一次</b>，不会永久阻止。',sel:'#weatherbar'},
+  {t:'撤退与退场',b:'点门番 →「查看/撤退/强化」，可以花 1 回响<b>主动撤回手牌</b>（本回合不能再上场）。耐久归零自动退场，<b>两个回合后</b>回到手上。<b>强化会保留</b>。',sel:'#lanes'},
+  {t:'余烬强化',b:'击退幽灵攒<b>余烬</b>（上限 6）。够 3 枚就能给门番<b>淬火</b>（攻击+1）或<b>加固</b>（耐久上限+1 并回满）—— 每人各一次，永久保留。',sel:'#lanes'},
+  {t:'德尔塔的唤雨',b:'德尔塔在场时，可以花 1 回响把<b>当前天气直接改成大雨</b>（不管现在是晴天还是浓雾，天气栏都会立即刷新成大雨）。大雨会让所有隐身敌人显形，并让夜之领主的雾甲失效。',sel:'#weatherbar'}
+];
+let coachIdx=0;
+function startCoach(){ coachIdx=0; $('#coach').classList.add('on'); paintCoach(); }
+function endCoach(){
+  $('#coach').classList.remove('on');
+  localStorage.setItem('se_coach','1');
+  setTimeout(tryFlushSay,400);
+}
+function paintCoach(){
+  const step=TUTORIAL[coachIdx], spot=$('#spot'), bub=$('#coachBubble');
+  const target=step.sel?$(step.sel):null;
+  if(target&&target.scrollIntoView) try{ target.scrollIntoView({block:'center'}); }catch(_){}
+  const place=()=>{
+    if(target&&target.getBoundingClientRect().width>0){
+      const r=target.getBoundingClientRect(), pad=8;
+      Object.assign(spot.style,{display:'block',left:(r.left-pad)+'px',top:(r.top-pad)+'px',
+        width:(r.width+pad*2)+'px',height:(r.height+pad*2)+'px'});
+      const bw=Math.min(340,window.innerWidth-28);
+      const left=clamp(r.left+r.width/2-bw/2,13,window.innerWidth-bw-13);
+      let top=r.bottom+13;
+      if(top+220>window.innerHeight) top=Math.max(13,r.top-220);
+      Object.assign(bub.style,{left:left+'px',top:top+'px',width:bw+'px',transform:'none'});
+    }else{
+      Object.assign(spot.style,{display:'none',left:'50%',top:'50%',width:'0',height:'0'});
+      Object.assign(bub.style,{left:'50%',top:'50%',width:Math.min(340,window.innerWidth-28)+'px',transform:'translate(-50%,-50%)'});
+    }
+  };
+  bub.innerHTML=`<h4>${step.t}</h4><p>${step.b}</p>
+    <div class="ccb"><span class="stp">${coachIdx+1} / ${TUTORIAL.length}</span>
+      <button data-cskip="1">跳过</button>
+      <button class="go" data-cnext="1">${coachIdx===TUTORIAL.length-1?'开始':'下一步'}</button></div>`;
+  place(); requestAnimationFrame(place);
+}
+$('#coachBubble').addEventListener('click',e=>{
+  if(e.target.closest('[data-cskip]')) return endCoach();
+  if(e.target.closest('[data-cnext]')){
+    if(coachIdx>=TUTORIAL.length-1) endCoach(); else { coachIdx++; paintCoach(); }
+  }
+});
+window.addEventListener('resize',()=>{ if($('#coach').classList.contains('on')) paintCoach(); });
+
+function openRules(){
+  $('#modalSheet').innerHTML=`
+  <h2>规则与设定</h2>
+  <p><b>对抗模式：</b>你在三条线上布防，电脑指挥幽灵从对面进攻。撑过 <b>15 个回合（三夜）</b>就赢；护盾归零就输。</p>
+  <h3>两档难度</h3>
+  <table><tr><th></th><th>新手</th><th>通常</th></tr>
+    <tr><td>护盾</td><td>12</td><td><b>10</b></td></tr>
+    <tr><td>每回合回响</td><td>5</td><td>5</td></tr>
+    <tr><td>手牌上限</td><td>5</td><td>5</td></tr>
+    <tr><td>幽灵耐久</td><td>−1（最低 1）</td><td>原样</td></tr>
+    <tr><td>第三夜幽灵攻击</td><td>不变</td><td><b>+1</b></td></tr>
+    <tr><td>敌方特殊行动</td><td>每 4 回合一次</td><td>每 4 回合一次</td></tr>
+    <tr><td>强化</td><td>3 枚余烬</td><td>3 枚余烬</td></tr>
+  </table>
+  <h3>一个回合</h3>
+  <ol>
+    <li><b>我方阶段</b>：拿到回响。上场 1 点、指挥进攻 1 点、换防或撤退 1 点、法术按卡面。</li>
+    <li><b>抽牌定天气</b>：翻 2 张牌 → 决定这回合的天气。手牌满 5 张就不翻牌，天气不变。</li>
+    <li><b>敌方阶段</b>：检查特殊行动 → 幽灵增援 → 每只攻击同线门番；那条线没人就直接撞护盾。</li>
+  </ol>
+  <h3>操作方式</h3>
+  <div class="why">
+    <b>拖拽：</b>直接把手牌拖到线上部署（鼠标和触屏都支持）。<br>
+    <b>点击：</b>点手牌选中 → 点线部署；点门番选中 → 点红色敌人进攻、点蓝色线换防、点自己打开面板。<br>
+    两种方式可以混用，动作做完自动取消选中。
+  </div>
+  <h3>敌方特殊行动（重要）</h3>
+  <div class="why">
+    敌方每 <b>4 回合</b>触发一次特殊行动（第 4、8、12 回合），在幽灵增援之前发动。随机三选一：
+    <ul style="margin-top:6px">
+      <li><b>浓雾</b>：本回合我方门番的攻击 −1（最低 1）。</li>
+      <li><b>犬吠</b>：本回合所有幽灵的攻击 +1。</li>
+      <li><b>增援</b>：立刻在两条线上各加入 1 只徘徊者。</li>
+    </ul>
+    <b>伽马可以延迟它：</b>如果触发的那回合伽马在场上，这一次特殊行动会被推迟到<b>下一回合</b>。<b>只延迟一次</b>，不能永久阻止。下一回合不论伽马在不在场，特殊行动都会照常触发。
+  </div>
+  <h3>伽马的关键机制</h3>
+  <div class="why">伽马的横扫<b>只对她所在的那条线</b>生效，不再横扫三条线。所以你需要判断哪条线敌人最多、最危险，花 1 点回响把她换过去。</div>
+  <h3>德尔塔的唤雨</h3>
+  <div class="why">德尔塔在场时可以花 1 回响把<b>当前天气立刻变成大雨</b> —— 无论现在是晴天、小雨还是浓雾，天气栏都会立即刷新成「🌧 大雨」。大雨会让所有隐身敌人显形，并让夜之领主的雾甲失效。</div>
+  <h3>攻击力是怎么算的</h3>
+  <div class="why">面板里会写清楚，例如 <b>攻击力 1 ＝ 基础 1 +1 淬火 −1 天气/敌方</b>。扣攻击的情况：<b>浓雾天</b>（双方攻击 −1）和敌方特殊行动<b>「浓雾」</b>（我方攻击 −1）；<b>街区</b>线上的门番则 +1，但<b>街区 +1 只对门番生效，对敌人不生效</b>。</div>
+  <h3>强化是永久的</h3>
+  <div class="why">淬火（攻击 +1）和加固（耐久上限 +1 并回满）各能对每名门番做一次，<b>而且跟着角色本人保留</b>。</div>
+  <h3>天气</h3>
+  <table><tr><th>抽到的牌</th><th>天气</th><th>影响</th></tr>
+    <tr><td>2 张门番</td><td><b>🌧 大雨</b></td><td>隐身显形；夜之领主雾甲失效</td></tr>
+    <tr><td>1 门番 + 1 法术</td><td><b>🌦 小雨</b></td><td>没有额外影响</td></tr>
+    <tr><td>2 张法术</td><td><b>🌫 浓雾 / ☀️ 晴天</b></td><td>各 50%。浓雾：双方攻击 −1；晴天：无事发生。</td></tr>
+    <tr><td>德尔塔·唤雨</td><td><b>🌧 大雨</b></td><td>花 1 回响强制变成大雨，覆盖当前天气</td></tr>
+  </table>
+  <h3>场景（每局随机抽 3 个）</h3>
+  <table><tr><th>场景</th><th>效果</th></tr>
+  ${SCENES.map(s=>`<tr><td><b>${s.icon} ${s.name}</b></td><td>${s.tip}</td></tr>`).join('')}</table>
+  <div class="why"><b>注意：</b>街区的攻击 +1 <b>只对门番生效</b>，对敌人不生效；钟楼废墟的敌人攻击 −1 只对敌人生效。</div>
+  <h3>法术（5 张）</h3>
+  <table><tr><th>法术</th><th>费用</th><th>效果</th></tr>
+  ${SPELLS.map(s=>`<tr><td><b>${s.glyph} ${s.name}</b></td><td>${s.cost}</td><td>${s.desc}</td></tr>`).join('')}</table>
+  <h3>门番</h3>
+  <table><tr><th>名字</th><th>耐久</th><th>攻击</th><th>能力</th></tr>
+  ${UNIT_IDS.map(id=>{const u=UNITS[id];
+    return `<tr><td><b>${u.glyph} ${u.name}</b> <span style="color:var(--ink-faint)">${u.title}</span></td><td>${u.hp}</td><td>${u.atk}${u.hits>1?'×'+u.hits:''}</td><td>${u.desc}</td></tr>`;}).join('')}</table>
+  <h3>敌人</h3>
+  <table><tr><th>名字</th><th>耐久</th><th>攻击</th><th>余烬</th><th>说明</th></tr>
+  <tr><td><b>徘徊者</b></td><td>1</td><td>1</td><td>1</td><td>最常见的幽灵</td></tr>
+  <tr><td><b>猎犬</b></td><td>2</td><td>2</td><td>2</td><td>那条线没有门番时，撞盾伤害 +1</td></tr>
+  <tr><td><b>低语者</b></td><td>1</td><td>1</td><td>1</td><td>隐身：看不见就打不到</td></tr>
+  <tr><td><b>夜之领主</b></td><td>4</td><td>3</td><td>3</td><td>雾甲：不在大雨天时，受到的伤害 −1</td></tr></table>
+  <button class="close" id="mClose">知道了</button>`;
+  $('#modal').classList.add('active');
+  $('#mClose').onclick=()=>$('#modal').classList.remove('active');
+}
+$('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') $('#modal').classList.remove('active'); });
+
+(function buildTable(){
+  $('#sceneTable').innerHTML='<tr><th>场景</th><th>效果</th></tr>'
+    +SCENES.map(s=>`<tr><td><b>${s.icon} ${s.name}</b></td><td>${s.tip}</td></tr>`).join('');
+  $('#unitTable').innerHTML='<tr><th>名字</th><th>耐久</th><th>攻击</th><th>能力</th></tr>'
+    +UNIT_IDS.map(id=>{const u=UNITS[id];
+      return `<tr><td><b>${u.glyph} ${u.name}</b> <span style="color:#8b93a8">· ${u.title}</span></td><td>${u.hp}</td><td>${u.atk}${u.hits>1?'×'+u.hits:''}</td><td>${u.desc}</td></tr>`;}).join('');
+  $('#spellTable').innerHTML='<tr><th>法术</th><th>费用</th><th>效果</th></tr>'
+    +SPELLS.map(s=>`<tr><td><b>${s.glyph} ${s.name}</b></td><td>${s.cost}</td><td>${s.desc}</td></tr>`).join('');
+  const all=SPELLS.map(s=>({...s,type:'spell'})).concat(UNIT_IDS.map(id=>({...UNITS[id],id,type:'unit',cost:1})));
+  $('#printCards').innerHTML=all.map(c=>`
+    <div class="pcard ${c.type==='spell'?'spell':''}">
+      <div class="ptop"><span class="pname">${c.glyph} ${c.name}</span><span class="pcost">${c.cost}</span></div>
+      <div class="ptag">${c.type==='unit'?('门番 · 耐久 '+c.hp+' · 攻击 '+c.atk+(c.hits>1?('×'+c.hits):'')):('法术 · 费用 '+c.cost)}</div>
+      <div class="peff">${c.desc}</div>
+      <div class="pfoot">世纪末歌 · 圣域余响</div></div>`).join('');
+  $('#printScenes').innerHTML=SCENES.map(s=>`
+    <div class="pcard scene">
+      <div class="ptop"><span class="pname">${s.icon} ${s.name}</span></div>
+      <div class="peff">${s.tip}</div>
+      <div class="pfoot">场景纸条 · 每局洗牌抽 3 张</div></div>`).join('');
+  let h='';
+  for(let i=0;i<4;i++) h+='<div class="tok g">徘徊者<br>1/1</div>';
+  for(let i=0;i<3;i++) h+='<div class="tok e">猎犬<br>2/2</div>';
+  for(let i=0;i<3;i++) h+='<div class="tok s">低语者<br>隐身</div>';
+  for(let i=0;i<2;i++) h+='<div class="tok b">夜之领主<br>4/3</div>';
+  $('#tokens').innerHTML=h;
+})();
+
+const PDF_W=1240, PDF_H=1754, PDF_PAD=72;
+const PDF_FONT='"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif';
+let pdfURL=null;
+function pdfNewPage(){const c=document.createElement('canvas');c.width=PDF_W;c.height=PDF_H;const x=c.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,PDF_W,PDF_H);x.textBaseline='alphabetic';return{c,x,y:PDF_PAD};}
+function pdfSet(x,size,bold,color){x.font=(bold?'bold ':'')+size+'px '+PDF_FONT;x.fillStyle=color||'#222222';}
+function pdfLines(x,text,size,bold,maxW){pdfSet(x,size,bold);const out=[];let line='';for(const ch of String(text)){if(ch==='\n'){out.push(line);line='';continue;}const t=line+ch;if(x.measureText(t).width>maxW&&line){out.push(line);line=ch;}else line=t;}if(line)out.push(line);return out;}
+function pdfRound(x,left,top,w,h,r){x.beginPath();x.moveTo(left+r,top);x.arcTo(left+w,top,left+w,top+h,r);x.arcTo(left+w,top+h,left,top+h,r);x.arcTo(left,top+h,left,top,r);x.arcTo(left,top,left+w,top,r);x.closePath();}
+function buildPDFPages(){
+  const pages=[];
+  let pg=pdfNewPage();pages.push(pg);
+  const newPage=()=>{pg=pdfNewPage();pages.push(pg);return pg;};
+  const need=h=>{if(pg.y+h>PDF_H-PDF_PAD)newPage();return pg;};
+  const title=t=>{need(96);pdfSet(pg.x,42,true,'#151515');pg.x.fillText(t,PDF_PAD,pg.y);pg.x.fillStyle='#9a7bd0';pg.x.fillRect(PDF_PAD,pg.y+16,190,7);pg.y+=76;};
+  const para=(t,size,color)=>{size=size||26;const lines=pdfLines(pg.x,t,size,false,PDF_W-PDF_PAD*2);for(const ln of lines){need(size+16);pdfSet(pg.x,size,false,color||'#333333');pg.x.fillText(ln,PDF_PAD,pg.y);pg.y+=size+16;}pg.y+=8;};
+  title('世纪末歌 · 圣域余响 —— 卡牌（9 张）');
+  const all=UNIT_IDS.map(id=>({...UNITS[id],type:'unit',cost:1})).concat(SPELLS.map(s=>({...s,type:'spell'})));
+  const cw=338,chh=200,gx=46,gy=44,cols=3;
+  const startX=PDF_PAD+((PDF_W-PDF_PAD*2)-(cw*cols+gx*(cols-1)))/2;
+  all.forEach((c,i)=>{
+    const x0=startX+(i%cols)*(cw+gx),y0=pg.y+Math.floor(i/cols)*(chh+gy);
+    pdfRound(pg.x,x0,y0,cw,chh,18);
+    pg.x.fillStyle='#ffffff';pg.x.fill();
+    pg.x.lineWidth=4;pg.x.strokeStyle=(c.type==='unit'?'#7b52ab':'#3c6ea6');pg.x.stroke();
+    pdfSet(pg.x,32,true,'#151515');pg.x.fillText(c.glyph+' '+c.name,x0+22,y0+48);
+    pdfSet(pg.x,21,false,'#6b7390');pg.x.fillText(c.type==='unit'?('门番 · 耐久 '+c.hp+' · 攻击 '+c.atk+(c.hits>1?('×'+c.hits):'')):('法术 · 费用 '+c.cost),x0+22,y0+80);
+    let ty=y0+116;pdfLines(pg.x,c.desc,21,false,cw-44).forEach(ln=>{pdfSet(pg.x,21,false,'#333');pg.x.fillText(ln,x0+22,ty);ty+=30;});
+    pdfSet(pg.x,17,false,'#8b93a8');pg.x.fillText('世纪末歌 · 圣域余响',x0+22,y0+chh-16);
+  });
+  newPage();
+  title('场景纸条（每局洗牌抽 3 张）');
+  SCENES.forEach((s,i)=>{const y0=pg.y+i*136;pdfRound(pg.x,PDF_PAD,y0,PDF_W-PDF_PAD*2,112,14);pg.x.fillStyle='#fffdf5';pg.x.fill();pg.x.lineWidth=3;pg.x.strokeStyle='#c98a2c';pg.x.stroke();pdfSet(pg.x,31,true,'#3a2a08');pg.x.fillText(s.icon+' '+s.name,PDF_PAD+22,y0+48);pdfSet(pg.x,22,false,'#5b5030');pg.x.fillText(s.tip,PDF_PAD+22,y0+84);pdfSet(pg.x,18,false,'#9a8c60');pg.x.fillText('场景纸条',PDF_W-PDF_PAD-118,y0+48);});
+  let ty=pg.y+SCENES.length*136+24;
+  pdfSet(pg.x,30,true,'#151515');pg.x.fillText('敌人 token（12 枚，剪下来用）',PDF_PAD,ty);ty+=94;
+  const tokList=[];
+  for(let i=0;i<4;i++)tokList.push(['徘徊者','耐 1','#9573cd']);
+  for(let i=0;i<3;i++)tokList.push(['猎犬','耐 2','#c8454f']);
+  for(let i=0;i<3;i++)tokList.push(['低语者','隐身','#39415a']);
+  for(let i=0;i<2;i++)tokList.push(['夜之领主','耐 4','#a8232f']);
+  let tx=PDF_PAD+70,rowY=ty;
+  tokList.forEach(t=>{pg.x.beginPath();pg.x.arc(tx,rowY,52,0,Math.PI*2);pg.x.fillStyle='#ffffff';pg.x.fill();pg.x.lineWidth=5;pg.x.strokeStyle=t[2];pg.x.stroke();pdfSet(pg.x,20,true,'#333');pg.x.textAlign='center';pg.x.fillText(t[0],tx,rowY-2);pdfSet(pg.x,18,false,'#777');pg.x.fillText(t[1],tx,rowY+26);pg.x.textAlign='left';tx+=128;if(tx>PDF_W-PDF_PAD-60){tx=PDF_PAD+70;rowY+=146;}});
+  newPage();
+  title('线下实体版 · 说明书');
+  para('完全脱离电子设备，只需要卡牌、骰子和纸质材料。');
+  para('目标：守住三条线，撑过 15 个回合（三夜）就赢；护盾归零就输。');
+  para('需要的东西：9 张卡（4 门番 + 5 法术）、7 颗六面骰 + 1 颗十二面骰、1 张波次表（打印）、12 枚纸质敌人 token（打印）。');
+  title('骰子分配');
+  para('d6 #1：回响（每回合重置为 5，上限 6）。d6 #2：余烬（0–6）。d6 #3–#5：门番耐久（最多 3 个门番）。d6 #6–#7：夜之领主耐久（最多 2 只）。d12：护盾（新手 12 / 通常 10）。');
+  title('单位表示');
+  para('门番：耐久用 d6 追踪；强化状态用卡牌方向表示——正放无强化，顺时针 90° 已淬火，逆时针 90° 已加固，倒放 180° 两者都有。');
+  para('徘徊者（血 1）：正面朝上放在线的左端。');
+  para('猎犬（血 2）：正面朝上放线的中间；受伤后倒转 180° 表示已受伤，再受伤移除。');
+  para('低语者（血 1）：背面朝上放线的最远端表示隐身；下雨或德尔塔出场时翻到正面。');
+  para('夜之领主（血 4）：拿一颗 d6 放在 token 旁边，转到 4。');
+  title('敌人放置规则');
+  para('优先放没有门番的线。都有门番：放敌人最多的线（会挤在一起）。并列：按左→中→右的顺序。每条线最多 2 只敌人（巷子 1 只），放不下就跳过。');
+  title('波次表（每回合对照）');
+  para('第 1 回合：徘徊者。第 2 回合：徘徊者 ×2。第 3 回合：徘徊者 ×2。第 4 回合：低语者。第 5 回合：猎犬 + 徘徊者。第 6 回合：徘徊者 + 低语者。第 7 回合：猎犬 + 徘徊者。第 8 回合：低语者 ×2。第 9 回合：猎犬 ×2 + 徘徊者。第 10 回合：徘徊者 ×2 + 猎犬。第 11 回合：低语者 + 猎犬。第 12 回合：徘徊者 + 夜之领主。第 13 回合：猎犬 ×2 + 徘徊者。第 14 回合：低语者 + 猎犬 ×2。第 15 回合：夜之领主 + 猎犬。');
+  title('特殊行动（第 4/8/12 回合，用 d6 判定）');
+  para('掷 1 颗 d6：1–2 = 浓雾（本回合我方门番攻击 −1）；3–4 = 犬吠（本回合所有幽灵攻击 +1）；5–6 = 增援（两条线各加 1 只徘徊者）。伽马在场时本回合不掷，把这次特殊行动推迟到下一回合，只延后一次。');
+  title('一个回合的流程');
+  para('① 我方阶段：回响骰转到 5。上场 1 点、指挥进攻 1 点、换防或撤退 1 点、法术按卡面、强化 3 余烬。');
+  para('② 抽牌定天气：翻 2 张牌进手牌（上限 5 张）。2 门番=大雨，1 门番+1 法术=小雨，2 法术=掷 d6（1–3 浓雾 / 4–6 晴天）。');
+  para('③ 敌方阶段：特殊行动检查（第 4/8/12 回合）→ 按波次表登场敌人 → 幽灵攻击（从左到右，按线结算）。');
+  para('④ 回合结束：回合 +1。第 5、10 回合结束全场门番耐久骰转大 1。护盾归零输，撑过 15 回合赢。');
+  para('德尔塔·唤雨：花 1 回响把当前天气强制改为大雨，覆盖晴天/小雨/浓雾，隐身全显形，夜之领主雾甲失效。');
+  title('双人对战模式');
+  para('守方：护盾 12（通常难度 10），每回合 5 回响，手牌上限 5。攻方：每回合获得幽灵点数（第 1–5 回合 3 点、第 6–10 回合 4 点、第 11–15 回合 5 点，可累积至 10 点），花点数部署幽灵（徘徊者 1、低语者 2、猎犬 2、夜之领主 4），每回合可免费使用一次特殊行动（每 4 回合限一次，伽马在场则推迟）。');
+  title('牌库管理');
+  para('每回合翻 2 张进手牌。法术用完进弃牌堆，门番卡不进弃牌堆。旧日残响用完后移出本局。牌库空了：弃牌堆洗混当新牌库。牌库和弃牌堆都空：不翻牌，天气不变。');
+  return pages;
+}
+function pdfAscii(str){const a=new Uint8Array(str.length);for(let i=0;i<str.length;i++)a[i]=str.charCodeAt(i)&0xff;return a;}
+function pdfJpeg(canvas){const url=canvas.toDataURL('image/jpeg',0.86);const bin=atob(url.slice(url.indexOf(',')+1));const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr;}
+function assemblePDF(pages){
+  const chunks=[];let len=0;const offs=[];
+  const add=u8=>{chunks.push(u8);len+=u8.length;};
+  const addObj=(n,head,jpg,tail)=>{offs[n]=len;add(pdfAscii(n+' 0 obj\n'+head));if(jpg)add(jpg);add(pdfAscii(tail));};
+  add(pdfAscii('%PDF-1.4\n'));add(new Uint8Array([0x25,0xE2,0xE3,0xCF,0xD3,0x0A]));
+  const n=pages.length,maxObj=2+n*3;const kids=[];for(let i=0;i<n;i++)kids.push((3+i*3)+' 0 R');
+  addObj(1,'<< /Type /Catalog /Pages 2 0 R >>\n',null,'endobj\n');
+  addObj(2,'<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+n+' >>\n',null,'endobj\n');
+  const jpgs=pages.map(pg=>pdfJpeg(pg.c));
+  for(let i=0;i<n;i++){
+    const pN=3+i*3,cN=pN+1,iN=pN+2;
+    addObj(pN,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 '+iN+' 0 R >> >> /Contents '+cN+' 0 R >>\n',null,'endobj\n');
+    const cs='q 595.28 0 0 841.89 0 0 cm /Im0 Do Q\n';
+    addObj(cN,'<< /Length '+cs.length+' >>\nstream\n'+cs,null,'endstream\nendobj\n');
+    const jpg=jpgs[i];
+    addObj(iN,'<< /Type /XObject /Subtype /Image /Width '+PDF_W+' /Height '+PDF_H+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jpg.length+' >>\nstream\n',jpg,'\nendstream\nendobj\n');
+  }
+  let xref='xref\n0 '+(maxObj+1)+'\n0000000000 65535 f \n';
+  for(let i=1;i<=maxObj;i++)xref+=String(offs[i]).padStart(10,'0')+' 00000 n \n';
+  const tail=xref+'trailer\n<< /Size '+(maxObj+1)+' /Root 1 0 R >>\nstartxref\n'+len+'\n%%EOF\n';
+  add(pdfAscii(tail));
+  return new Blob(chunks,{type:'application/pdf'});
+}
+function makePDFDoc(){
+  const box=$('#pdfBox'),tip=$('#pdfTip');
+  box.classList.add('on');
+  tip.textContent='正在生成，请稍等 1～3 秒…';
+  $('#pdfSave').disabled=true;$('#pdfOpen').disabled=true;
+  setTimeout(()=>{
+    try{
+      const pages=buildPDFPages();
+      const blob=assemblePDF(pages);
+      if(pdfURL)URL.revokeObjectURL(pdfURL);
+      pdfURL=URL.createObjectURL(blob);
+      tip.innerHTML='已生成 <b>'+pages.length+' 页</b> A4 材料（约 '+Math.round(blob.size/1024)+' KB）。';
+      $('#pdfSave').disabled=false;$('#pdfOpen').disabled=false;
+    }catch(err){
+      console.error('[pdf]',err);
+      tip.innerHTML='生成失败了，可以用浏览器打印代替。';
+      $('#pdfSave').disabled=true;$('#pdfOpen').disabled=true;
+    }
+  },60);
+}
+
+function isFs(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+function toggleFull(){
+  const el=document.documentElement;
+  try{
+    if(isFs()){
+      const fn=document.exitFullscreen||document.webkitExitFullscreen;
+      if(fn) fn.call(document);
+    }else{
+      const fn=el.requestFullscreen||el.webkitRequestFullscreen;
+      if(fn){ const p=fn.call(el); if(p&&p.catch) p.catch(()=>{}); }
+    }
+  }catch(_){}
+}
+
+function showScreen(id){
+  const cur=$('.screen.active'), next=$('#'+id);
+  if(!next||cur===next) return;
+  if(cur) cur.classList.remove('active');
+  next.classList.add('active'); next.classList.remove('enter');
+  void next.offsetWidth; next.classList.add('enter');
+}
+function initGame(){
+  newGame();
+  busy=false; sel=null; lastSay=0; pendingSay=null;
+  clearTimeout(watchdog);
+  $('#dlg').classList.remove('on');
+  $('#unitPanel').classList.remove('on');
+  $('#result').classList.remove('on');
+  $('#banner').classList.remove('on');
+  startTurn();
+  setStatus('该你了：拖动卡牌到线上部署。',false);
+  if(!localStorage.getItem('se_coach')) setTimeout(startCoach,900);
+}
+
+$('#btnPlay').onclick=()=>{ showScreen('scr-game'); initGame(); };
+$('#btnHowto').onclick=()=>{ showScreen('scr-game'); initGame(); setTimeout(startCoach,500); };
+$('#btnRules').onclick=openRules;
+$('#btnRules2').onclick=openRules;
+$('#btnCoach').onclick=startCoach;
+$('#btnFull').onclick=toggleFull;
+$('#btnTableGo').onclick=()=>showScreen('scr-table');
+$('#btnTableBack').onclick=()=>showScreen($('#scr-game').classList.contains('active')?'scr-game':'scr-title');
+$('#btnPrint').onclick=()=>window.print();
+$('#btnPDF').onclick=makePDFDoc;
+$('#pdfClose').onclick=()=>$('#pdfBox').classList.remove('on');
+$('#pdfSave').onclick=()=>{
+  if(!pdfURL) return;
+  const a=document.createElement('a');
+  a.href=pdfURL; a.download='世纪末歌-圣域余响-打印材料.pdf';
+  document.body.appendChild(a); a.click(); a.remove();
+};
+$('#pdfOpen').onclick=()=>{ if(pdfURL) window.open(pdfURL,'_blank'); };
+$('#btnEndTurn').onclick=()=>endTurn();
+$('#btnUndo').onclick=undo;
+$('#btnAgain').onclick=()=>{ $('#result').classList.remove('on'); showScreen('scr-game'); initGame(); };
+$('#btnToTitle').onclick=()=>{ $('#result').classList.remove('on'); showScreen('scr-title'); };
+
+$('#diffSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-d]'); if(!b) return;
+  difficulty=b.dataset.d; localStorage.setItem('se_diff',difficulty);
+  $$('#diffSeg button').forEach(x=>x.classList.toggle('on',x===b));
+  $('#optNote').textContent=MODES[difficulty].desc;
+});
+
+document.addEventListener('keydown',e=>{
+  if($('#pdfBox').classList.contains('on')){ if(e.key==='Escape') $('#pdfBox').classList.remove('on'); return; }
+  if($('#modal').classList.contains('active')){ if(e.key==='Escape') $('#modal').classList.remove('active'); return; }
+  if($('#coach').classList.contains('on')){ if(e.key==='Escape') endCoach(); return; }
+  if($('#unitPanel').classList.contains('on')){ if(e.key==='Escape') $('#unitPanel').classList.remove('on'); return; }
+  if(!$('#scr-game').classList.contains('active')) return;
+  const k=e.key.toLowerCase();
+  if(k==='e') endTurn();
+  else if(k==='u') undo();
+  else if(e.key==='?'||k==='/') openRules();
+  else if(e.key==='Escape'&&sel){ sel=null; render(); }
+});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+
+window.addEventListener('resize',()=>{ try{ if(S&&!S.over) render(); }catch(_){} });
+window.addEventListener('orientationchange',()=>{
+  setTimeout(()=>{ try{ if(S&&!S.over) render(); }catch(_){} },320);
+});
+
+window.addEventListener('error',ev=>{
+  console.error('[global]',ev.error||ev.message);
+  try{ busy=false; if(S&&!S.over) render(); updateUndoBtn(); }catch(_){}
+});
+
+(function boot(){
+  $$('#diffSeg button').forEach(x=>x.classList.toggle('on',x.dataset.d===difficulty));
+  $('#optNote').textContent=MODES[difficulty].desc;
+  ['#scr-boot','#scr-title'].forEach(s=>{
+    const host=$(s); if(!host) return;
+    for(let i=0;i<26;i++){
+      const r=document.createElement('div'); r.className='rain';
+      r.style.left=(Math.random()*100)+'%';
+      r.style.animationDuration=(1+Math.random()*1.2)+'s';
+      r.style.animationDelay=(Math.random()*2.4)+'s';
+      r.style.opacity=(.2+Math.random()*.5);
+      host.appendChild(r);
+    }
+  });
+  const tips=['正在唤醒圣域…','正在擦亮钟楼的指针…','雨要来了。'];
+  let i=0;
+  const t=setInterval(()=>{ i=(i+1)%tips.length; $('#bootTip').textContent=tips[i]; },420);
+  setTimeout(()=>{ clearInterval(t); showScreen('scr-title'); },1250);
+})();
+</script>
+</body>
+</html>
